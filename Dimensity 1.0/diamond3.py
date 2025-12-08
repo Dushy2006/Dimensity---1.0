@@ -689,10 +689,10 @@ btn_style = {
     "padx": 20,
     "pady": 10
 }
-tk.Button(bottom_frame, text="E-Play", command=open_eplay, **btn_style).pack(side="left", padx=20, pady=10)
-tk.Button(bottom_frame, text="E-Calci",command=lambda:launch_ecalc_embedded(root,ecalc_path) ,**btn_style).pack(side="left", padx=20, pady=10)
-tk.Button(bottom_frame, text="E-Files", command=open_efiles, **btn_style).pack(side="left", padx=20, pady=10)
-tk.Button(bottom_frame, text="E-Calendar", command=open_calendar,**btn_style).pack(side="left", padx=20, pady=10)
+tk.Button(bottom_frame, text="🎮 E-Play", command=open_eplay, **btn_style).pack(side="left", padx=20, pady=10)
+tk.Button(bottom_frame, text="🧮 E-Calci",command=lambda:launch_ecalc_embedded(root,ecalc_path) ,**btn_style).pack(side="left", padx=20, pady=10)
+tk.Button(bottom_frame, text="📁 E-Files", command=open_efiles, **btn_style).pack(side="left", padx=20, pady=10)
+tk.Button(bottom_frame, text="📅 E-Calendar", command=open_calendar,**btn_style).pack(side="left", padx=20, pady=10)
 
 #Added fullscreen toggle button for the whole of dimensity
 
