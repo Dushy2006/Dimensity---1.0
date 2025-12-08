@@ -156,9 +156,9 @@ def open_settings():
              fg="white", bg="black", wraplength=860, justify="left").pack(padx=12, pady=(0, 12), anchor="w")
 
     # Footer Close button (clear visible colors)
-    footer = tk.Frame(settings_win, bg="black")
-    footer.pack(fill="x", padx=12, pady=8)
-    tk.Button(footer, text="Close", font=("Helvetica Neue", 14, "bold"),
+    back_btn_settinngs= tk.Frame(settings_win, bg="black")
+    back_btn_settinngs.pack(fill="x", padx=12, pady=8)
+    tk.Button(back_btn_settinngs, text="Close", font=("Helvetica Neue", 14, "bold"),
               bg="#222222", fg="black", activebackground="#333333",
               command=settings_win.destroy).pack(side="right")
 
@@ -213,6 +213,7 @@ def open_efiles():
     ewin.configure(bg="black")
     ewin.transient(root)
     ewin.grab_set()
+    ewin.attributes("-fullscreen",True)
 
     content = tk.Frame(ewin, bg="black")
     content.pack(fill="both", expand=True, padx=40, pady=8)
@@ -292,6 +293,8 @@ def open_efiles():
         big_back_button(action_panel, lambda: select_type(file_type)).pack(side="bottom", pady=8)
         raise_panel(action_panel)
 
+
+
     # ---------------- Home Panel ----------------
     tk.Label(home_panel, text="Choose Mode", font=("Helvetica Neue", 28), fg="white", bg="black").pack(pady=20)
     btns = tk.Frame(home_panel, bg="black")
@@ -313,6 +316,13 @@ def open_efiles():
 
     make_button(btns, "READ", lambda: go_to_type("read")).pack(side="left", padx=30)
     make_button(btns, "WRITE", lambda: go_to_type("write")).pack(side="left", padx=30)
+    
+    back_btn_files= tk.Frame(ewin, bg="black")
+    back_btn_files.pack(fill="x", padx=12, pady=8)
+    tk.Button(back_btn_files, text="Close", font=("Helvetica Neue", 14, "bold"),
+              bg="#222222", fg="black", activebackground="#333333",
+              command=ewin.destroy).pack(side="right")
+
 
     # ---------------- Type / Action Panel ----------------
     def select_type(ftype):
@@ -384,6 +394,7 @@ def open_eplay():
     eplay_window.title("E-Play")
     eplay_window.geometry(f"{screen_width}x{screen_height}")
     eplay_window.configure(bg="black")
+    eplay_window.attributes("-fullscreen",True)
 
     tk.Label(eplay_window, text="E-PLAY",
              font=("Helvetica Neue", 60, "bold"),
@@ -391,6 +402,12 @@ def open_eplay():
 
     games_frame = tk.Frame(eplay_window, bg="black")
     games_frame.pack(pady=20)
+
+    back_btn_eplay= tk.Frame(eplay_window, bg="black")
+    back_btn_eplay.pack(fill="x", padx=12, pady=8)
+    tk.Button(back_btn_eplay, text="Close", font=("Helvetica Neue", 14, "bold"),
+              bg="#222222", fg="black", activebackground="#333333",
+              command=eplay_window.destroy).pack(side="right")
 
     # Pong game icon
     pong_icon_path = os.path.join(BASE_PATH, "pong-logo.jpg")
@@ -507,9 +524,15 @@ def launch_ecalc_embedded(parent_window, ecalc_filepath):
     win.title("E-Calc")
     try:
         win.geometry("900x700")
+        win.attributes("-fullscreen",True)
     except Exception:
         pass
-
+    
+    back_btn_calci= tk.Frame(win, bg="black")
+    back_btn_calci.pack(fill="x", padx=12, pady=8)
+    tk.Button(back_btn_calci, text="Close", font=("Helvetica Neue", 14, "bold"),
+              bg="#222222", fg="black", activebackground="#333333",
+              command=win.destroy).pack(side="right")
     # attach to parent so macOS groups window with the main app
     try:
         win.transient(parent_window)
