@@ -1,0 +1,2503 @@
+import tkinter as tk
+import math
+import random
+from tkinter import simpledialog,messagebox
+from math import factorial
+from collections import Counter
+from tkinter import ttk
+from tkinter import*
+
+
+calculation = ""
+display_calculation = ""
+mode='DEG'
+memory_value=0
+
+# --- CORE FUNCTIONS ---
+def add_to_calculation(symbol, display_symbol=None):
+    global calculation, display_calculation
+    if symbol == '(':
+        if calculation and (calculation[-1].isdigit() or calculation[-1] == ')'):
+            calculation += '*' + symbol
+            display_calculation += '*' + (display_symbol if display_symbol else symbol)
+            update_display()
+            return
+    calculation += str(symbol)
+    display_calculation += str(display_symbol if display_symbol else symbol)
+    update_display()
+
+def update_display():
+    text_result.delete(0, tk.END)
+    text_result.insert(0, display_calculation)
+
+def evaluate_calculation():
+    global calculation, display_calculation
+    try:
+        result = str(eval(calculation, {"math": math}))
+        calculation = result
+        display_calculation = result
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, "Error")
+
+def clear_field():
+    global calculation, display_calculation
+    calculation = ""
+    display_calculation = ""
+    update_display()
+
+def delete_last():
+    global calculation, display_calculation
+    calculation = calculation[:-1]
+    display_calculation = display_calculation[:-1]
+    update_display()
+
+def add_sqrt():
+    add_to_calculation('math.sqrt(', '√(')
+
+def add_cbrt():
+    add_to_calculation('**(1/3)', '∛')
+
+def add_pow():
+    add_to_calculation('**', '^')
+
+# --- MODE SWITCHING ---
+def show_mode(mode):
+    standard_frame.pack_forget()
+    scientific_frame.pack_forget()
+    matrix_frame.pack_forget()
+    Determinant_frame.pack_forget() 
+    progression_frame.pack_forget()
+    programming_frame.pack_forget()
+    permutations_frame.pack_forget()
+    
+    if mode == 'standard':
+        text_result.pack(padx=10, pady=10, ipadx=8, ipady=15, fill='x')
+        standard_frame.pack()
+    elif mode == 'scientific':
+        text_result.pack(padx=10, pady=10, ipadx=8, ipady=15, fill='x')
+        scientific_frame.pack()
+    elif mode == 'matrices':
+        text_result.pack_forget()
+        matrix_frame.pack()
+    elif mode == 'determinants':
+        text_result.pack_forget()
+        Determinant_frame.pack()
+    elif mode == 'progression':
+        text_result.pack_forget()
+        progression_frame.pack()
+    elif mode=='programming':
+       text_result.pack_forget()
+       programming_frame.pack() 
+    elif mode == 'permutations':
+        text_result.pack_forget()
+        permutations_frame.pack()
+   
+
+    
+def sine_function():
+    global calculation, display_calculation
+    try:
+        if calculation.strip() == "":
+            value = 0
+        else:
+            value = eval(calculation, {"math": math})
+        if mode == 'DEG':
+            value = math.radians(value)
+        result = math.sin(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0,'Error')
+
+def cos_function():
+    global calculation, display_calculation
+    try:
+        if calculation.strip() == "":
+            value = 0
+        else:
+            value = eval(calculation, {"math": math})
+        if mode == 'DEG':
+            value = math.radians(value)
+        result = math.cos(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0,'Error')
+
+def tan_function():
+    global calculation, display_calculation
+    try:
+        if calculation.strip() == "":
+            value = 0
+        else:
+            value = eval(calculation, {"math": math})
+        if mode == 'DEG':
+            value = math.radians(value)
+        result = math.tan(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0,'Error')
+
+def cot_function():
+    global calculation, display_calculation
+    try:
+        if calculation.strip() == "":
+            value = 0
+        else:
+            value = eval(calculation, {"math": math})
+        if mode == 'DEG':
+            value = math.radians(value)
+        result = 1 / math.tan(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0,'Error')
+
+def cosec_function():
+    global calculation, display_calculation
+    try:
+        if calculation.strip() == "":
+            value = 0
+        else:
+            value = eval(calculation, {"math": math})
+        if mode == 'DEG':
+            value = math.radians(value)
+        result = 1 / math.sin(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0,'Error')
+
+def sec_function():
+    global calculation, display_calculation
+    try:
+        if calculation.strip() == "":
+            value = 0
+        else:
+            value = eval(calculation, {"math": math})
+        if mode == 'DEG':
+            value = math.radians(value)
+        result = 1 / math.cos(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0,'Error')
+
+def calculate_log():
+    global calculation, display_calculation
+    try:
+        if calculation.strip() == "":
+            value = 1
+        else:
+            value = eval(calculation, {'math': math})
+        result = math.log10(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+
+def calculate_ln():
+    global calculation, display_calculation
+    try:
+        if calculation.strip() == "":
+            value = 1
+        else:
+            value = eval(calculation, {'math': math})
+        result = math.log(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+
+def addpi():
+     add_to_calculation('math.pi','π')
+
+def adde():
+    add_to_calculation('math.e', 'e')
+
+def calculate_factorial():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = math.factorial(int(value))
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+def calculate_power10():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = math.pow(10, value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+def calculate_power2():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = math.pow(2, value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error') 
+def calculate_abs():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = abs(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+def calculate_floor():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = math.floor(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+def calculate_signum():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        if value > 0:
+            result = 1
+        elif value < 0:
+            result = -1
+        else:
+            result = 0
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error') 
+def calculate_frac_part():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = value - math.floor(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+def deg_to_rad():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = math.radians(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+
+def rad_to_deg():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = math.degrees(value)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+
+def generate_random():
+    global calculation, display_calculation
+    try:
+        result = random.random()
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+def calculate_reciprocal():
+    global calculation, display_calculation
+    try:
+        value = eval(calculation, {'math': math})
+        result = 1 / value
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+def calculate_nth_root():
+    global calculation, display_calculation
+    try:
+        n = simpledialog.askinteger("Nth Root", "Enter n (root degree):")
+        if n is None or n == 0:
+            return
+        value = eval(calculation, {'math': math})
+        result = value ** (1/n)
+        calculation = str(result)
+        display_calculation = str(result)
+        update_display()
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+def memory_add():
+    global calculation, memory_value
+    try:
+        value = eval(calculation, {'math': math})
+        memory_value += value
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+
+def memory_subtract():
+    global calculation, memory_value
+    try:
+        value = eval(calculation, {'math': math})
+        memory_value -= value
+    except:
+        clear_field()
+        text_result.insert(0, 'Error')
+
+def memory_recall():
+    global calculation, display_calculation, memory_value
+    calculation = str(memory_value)
+    display_calculation = str(memory_value)
+    update_display()
+
+def memory_clear():
+    global memory_value
+    memory_value = 0
+
+# --- MAIN WINDOW SETUP ---
+root = tk.Tk()
+root.geometry('800x875')
+root.title('E_Calci')
+
+# --- MENU ---
+menu = tk.Menu(root)
+root.config(menu=menu)
+mode_menu = tk.Menu(menu, tearoff=0)
+menu.add_cascade(label="Mode", menu=mode_menu)
+mode_menu.add_command(label="Standard", command=lambda: show_mode('standard'))
+mode_menu.add_command(label="Scientific", command=lambda: show_mode('scientific'))
+mode_menu.add_command(label="Matrices", command=lambda: show_mode('matrices'))
+mode_menu.add_command(label='Determinants',command=lambda:show_mode('determinants'))
+
+mode_menu.add_command(label='Progression',command=lambda:show_mode('progression'))
+mode_menu.add_command(label="Programming", command=lambda: show_mode('programming'))
+mode_menu.add_command(label="Permutations & Combinations", command=lambda: show_mode('permutations'))
+# --- DISPLAY ---
+text_result = tk.Entry(root, font=("Arial", 24), width=30, justify='right')
+text_result.pack(padx=10, pady=10, ipadx=8, ipady=15, fill='x')
+
+# --- FRAMES ---
+standard_frame = tk.Frame(root)
+scientific_frame = tk.Frame(root)
+matrix_frame=tk.Frame(root)
+Determinant_frame=tk.Frame(root)
+progression_frame = tk.Frame(root) 
+
+programming_frame = tk.Frame(root,bg="#1E1E1E")
+permutations_frame = tk.Frame(root)
+
+
+# --- STANDARD MODE BUTTONS (your exact style) ---
+btn1=tk.Button(standard_frame,text='1',command=lambda:add_to_calculation(1),width=5,font=("Arial",24))
+btn1.grid(row=2,column=1)
+btn2=tk.Button(standard_frame,text='2',command=lambda:add_to_calculation(2),width=5,font=("Arial",24))
+btn2.grid(row=2,column=2)
+btn3=tk.Button(standard_frame,text='3',command=lambda:add_to_calculation(3),width=5,font=("Arial",24))
+btn3.grid(row=2,column=3)
+btn4=tk.Button(standard_frame,text='4',command=lambda:add_to_calculation(4),width=5,font=("Arial",24))
+btn4.grid(row=3,column=1)
+btn5=tk.Button(standard_frame,text='5',command=lambda:add_to_calculation(5),width=5,font=("Arial",24))
+btn5.grid(row=3,column=2)
+btn6=tk.Button(standard_frame,text='6',command=lambda:add_to_calculation(6),width=5,font=("Arial",24))
+btn6.grid(row=3,column=3)
+btn7=tk.Button(standard_frame,text='7',command=lambda:add_to_calculation(7),width=5,font=("Arial",24))
+btn7.grid(row=4,column=1)
+btn8=tk.Button(standard_frame,text='8',command=lambda:add_to_calculation(8),width=5,font=("Arial",24))
+btn8.grid(row=4,column=2)
+btn9=tk.Button(standard_frame,text='9',command=lambda:add_to_calculation(9),width=5,font=("Arial",24))
+btn9.grid(row=4,column=3)
+btn0=tk.Button(standard_frame,text='0',command=lambda:add_to_calculation(0),width=5,font=("Arial",24))
+btn0.grid(row=5,column=2)
+
+btnplus=tk.Button(standard_frame,text='+',command=lambda:add_to_calculation('+'),width=5,font=('Arial',24))
+btnplus.grid(row=2,column=4)
+btnminus=tk.Button(standard_frame,text='-',command=lambda:add_to_calculation('-'),width=5,font=('Arial',24))
+btnminus.grid(row=3,column=4)
+btnmulti=tk.Button(standard_frame,text='*',command=lambda:add_to_calculation('*'),width=5,font=('Arial',24))
+btnmulti.grid(row=4,column=4)
+btndivision=tk.Button(standard_frame,text='/',command=lambda:add_to_calculation('/'),width=5,font=('Arial',24))
+btndivision.grid(row=5,column=4)
+
+btnopen=tk.Button(standard_frame,text='(',command=lambda:add_to_calculation('('),width=5,font=('Arial',24))
+btnopen.grid(row=5,column=1)
+btnclose=tk.Button(standard_frame,text=')',command=lambda:add_to_calculation(')'),width=5,font=('Arial',24))
+btnclose.grid(row=5,column=3)
+
+btnclear=tk.Button(standard_frame,text='C',command=clear_field,width=11,font=('Arial',24))
+btnclear.grid(row=6,column=1,columnspan=2)
+btnequals=tk.Button(standard_frame,text='=',command=evaluate_calculation,width=11,font=('Arial',24))
+btnequals.grid(row=6,column=3,columnspan=2)
+
+btndot = tk.Button(standard_frame, text='.', command=lambda: add_to_calculation('.'), width=5, font=('Arial',24))
+btndot.grid(row=5, column=5)
+btndel = tk.Button(standard_frame, text='⌫', command=delete_last, width=5, font=('Arial',24))
+btndel.grid(row=6, column=5)
+btnsqrt = tk.Button(standard_frame, text='√', command=add_sqrt, width=5, font=('Arial',24))
+btnsqrt.grid(row=2, column=5)
+btncbrt = tk.Button(standard_frame, text='∛', command=add_cbrt, width=5, font=('Arial',24))
+btncbrt.grid(row=3, column=5)
+btnpow = tk.Button(standard_frame, text='^', command=add_pow, width=5, font=('Arial',24))
+btnpow.grid(row=4, column=5)
+
+# --- SCIENTIFIC MODE PLACEHOLDER ---
+
+btnsin=tk.Button(scientific_frame,text='sin',command=sine_function,width=5,font=('Arial',24))
+btnsin.grid(row=0,column=0)
+btncos=tk.Button(scientific_frame,text='cos',command=cos_function,width=5,font=('Arial',24))
+btncos.grid(row=0,column=1)
+btntan=tk.Button(scientific_frame,text='tan',command=tan_function,width=5,font=('Arial',24))
+btntan.grid(row=0,column=2)
+btncot=tk.Button(scientific_frame,text='cot',command=cot_function,width=5,font=('Arial',24))
+btncot.grid(row=0,column=3)
+btncosec=tk.Button(scientific_frame,text='cosec',command=cosec_function,width=5,font=('Arial',24))
+btncosec.grid(row=0,column=4)
+btnsec=tk.Button(scientific_frame,text='sec',command=sec_function,width=5,font=('Arial',24))
+btnsec.grid(row=0,column=5)
+btnsqrt = tk.Button(scientific_frame, text='√', command=add_sqrt, width=5, font=('Arial',24))
+btnsqrt.grid(row=1, column=0)
+btncbrt = tk.Button(scientific_frame, text='∛', command=add_cbrt, width=5, font=('Arial',24))
+btncbrt.grid(row=1, column=1)
+btnpow = tk.Button(scientific_frame, text='^', command=add_pow, width=5, font=('Arial',24))
+btnpow.grid(row=1, column=2)
+btndel = tk.Button(scientific_frame, text='⌫', command=delete_last, width=5, font=('Arial',24))
+btndel.grid(row=1, column=3)
+btnclear=tk.Button(scientific_frame,text='C',command=clear_field,width=5,font=('Arial',24))
+btnclear.grid(row=1,column=4)
+btnopen=tk.Button(scientific_frame,text='(',command=lambda:add_to_calculation('('),width=5,font=('Arial',24))
+btnopen.grid(row=1,column=5)
+btnclose=tk.Button(scientific_frame,text=')',command=lambda:add_to_calculation(')'),width=5,font=('Arial',24))
+btnclose.grid(row=1,column=6)
+btnpi = tk.Button(scientific_frame, text='π', command=addpi, width=5, font=('Arial',24))
+btnpi.grid(row=2, column=6)
+btn7=tk.Button(scientific_frame,text='7',command=lambda:add_to_calculation(7),width=5,font=("Arial",24))
+btn7.grid(row=2,column=0)
+btn8=tk.Button(scientific_frame,text='8',command=lambda:add_to_calculation(8),width=5,font=("Arial",24))
+btn8.grid(row=2,column=1)
+btn9=tk.Button(scientific_frame,text='9',command=lambda:add_to_calculation(9),width=5,font=("Arial",24))
+btn9.grid(row=2,column=2)
+btn4=tk.Button(scientific_frame,text='4',command=lambda:add_to_calculation(4),width=5,font=("Arial",24))
+btn4.grid(row=3,column=0)
+btn5=tk.Button(scientific_frame,text='5',command=lambda:add_to_calculation(5),width=5,font=("Arial",24))
+btn5.grid(row=3,column=1)
+btn6=tk.Button(scientific_frame,text='6',command=lambda:add_to_calculation(6),width=5,font=("Arial",24))
+btn6.grid(row=3,column=2)
+btn1=tk.Button(scientific_frame,text='1',command=lambda:add_to_calculation(1),width=5,font=("Arial",24))
+btn1.grid(row=4,column=0)
+btn2=tk.Button(scientific_frame,text='2',command=lambda:add_to_calculation(2),width=5,font=("Arial",24))
+btn2.grid(row=4,column=1)
+btn3=tk.Button(scientific_frame,text='3',command=lambda:add_to_calculation(3),width=5,font=("Arial",24))
+btn3.grid(row=4,column=2)
+btnlog = tk.Button(scientific_frame, text='log', command=calculate_log, width=5, font=('Arial',24))
+btnlog.grid(row=2, column=3)
+btnequals=tk.Button(scientific_frame,text='=',command=evaluate_calculation,width=11,font=('Arial',24))
+btnequals.grid(row=5,column=6,columnspan=2)
+btnplus=tk.Button(scientific_frame,text='+',command=lambda:add_to_calculation('+'),width=5,font=('Arial',24))
+btnplus.grid(row=4,column=3)
+btnminus=tk.Button(scientific_frame,text='-',command=lambda:add_to_calculation('-'),width=5,font=('Arial',24))
+btnminus.grid(row=4,column=4)
+btnmulti=tk.Button(scientific_frame,text='*',command=lambda:add_to_calculation('*'),width=5,font=('Arial',24))
+btnmulti.grid(row=4,column=5)
+btndivision=tk.Button(scientific_frame,text='/',command=lambda:add_to_calculation('/'),width=5,font=('Arial',24))
+btndivision.grid(row=4,column=6)
+btnln = tk.Button(scientific_frame, text='ln', command=calculate_ln, width=5, font=('Arial',24))
+btnln.grid(row=2, column=4)
+btn0=tk.Button(scientific_frame,text='0',command=lambda:add_to_calculation(0),width=5,font=("Arial",24))
+btn0.grid(row=5,column=0)
+btne = tk.Button(scientific_frame, text='e', command=adde, width=5, font=('Arial',24))
+btne.grid(row=2, column=5)
+btnfact = tk.Button(scientific_frame, text='n!', command=calculate_factorial, width=5, font=('Arial',24))
+btnfact.grid(row=0, column=6)
+btn10pow = tk.Button(scientific_frame, text='10^x', command=calculate_power10, width=5, font=('Arial',24))
+btn10pow.grid(row=0, column=7)
+btn2pow = tk.Button(scientific_frame, text='2^x', command=calculate_power2, width=5, font=('Arial',24))
+btn2pow.grid(row=1, column=7)
+btnabs = tk.Button(scientific_frame, text='|x|', command=calculate_abs, width=5, font=('Arial',24))
+btnabs.grid(row=3 ,column=3)
+btnfloor = tk.Button(scientific_frame, text='⌊x⌋', command=calculate_floor, width=5, font=('Arial',24))
+btnfloor.grid(row=3, column=4)
+btnsign = tk.Button(scientific_frame, text='sgn', command=calculate_signum, width=5, font=('Arial',24))
+btnsign.grid(row=3, column=5)
+btnfrac = tk.Button(scientific_frame, text='frac', command=calculate_frac_part, width=5, font=('Arial',24))
+btnfrac.grid(row=3, column=6)
+btnd2r = tk.Button(scientific_frame, text='Deg→Rad', command=deg_to_rad, width=11, font=('Arial',24))
+btnd2r.grid(row=5, column=2,columnspan=2)
+
+btnr2d = tk.Button(scientific_frame, text='Rad→Deg', command=rad_to_deg, width=11, font=('Arial',24))
+btnr2d.grid(row=5, column=4,columnspan=2)
+btndot = tk.Button(scientific_frame, text='.', command=lambda: add_to_calculation('.'), width=5, font=('Arial',24))
+btndot.grid(row=5, column=1)
+btnrand = tk.Button(scientific_frame, text='Rand', command=generate_random, width=5, font=('Arial',24))
+btnrand.grid(row=3, column=7)
+
+btnrecip = tk.Button(scientific_frame, text='1/x', command=calculate_reciprocal, width=5, font=('Arial',24))
+btnrecip.grid(row=2, column=7)
+btnmplus = tk.Button(scientific_frame, text='M+', command=memory_add, width=5, font=('Arial',24))
+btnmplus.grid(row=11, column=0)
+
+btnmminus = tk.Button(scientific_frame, text='M-', command=memory_subtract, width=5, font=('Arial',24))
+btnmminus.grid(row=11, column=1)
+
+btnmr = tk.Button(scientific_frame, text='MR', command=memory_recall, width=5, font=('Arial',24))
+btnmr.grid(row=11, column=2)
+
+btnmc = tk.Button(scientific_frame, text='MC', command=memory_clear, width=5, font=('Arial',24))
+btnmc.grid(row=6, column=3)
+btnnroot = tk.Button(scientific_frame, text='n√x', command=calculate_nth_root, width=5, font=('Arial',24))
+btnnroot.grid(row=4, column=7)
+
+
+show_mode('standard')
+#matrix mode ui start
+#add
+matrix_entries = []
+
+def add_matrices_mode():
+    global matrix_entries
+    matrix_entries.clear()
+
+    # Clear old entries
+    for widget in matrix_input_frame.winfo_children():
+        widget.destroy()
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+    # Show config dialog
+    class MatrixConfigDialog(simpledialog.Dialog):
+        def body(self, master):
+            tk.Label(master, text="Number of matrices:").grid(row=0, column=0, sticky='e')
+            tk.Label(master, text="Number of rows:").grid(row=1, column=0, sticky='e')
+            tk.Label(master, text="Number of columns:").grid(row=2, column=0, sticky='e')
+
+            self.num_matrices_entry = tk.Entry(master)
+            self.rows_entry = tk.Entry(master)
+            self.cols_entry = tk.Entry(master)
+
+            self.num_matrices_entry.grid(row=0, column=1)
+            self.rows_entry.grid(row=1, column=1)
+            self.cols_entry.grid(row=2, column=1)
+
+            return self.num_matrices_entry
+
+        def apply(self):
+            try:
+                self.num_matrices = int(self.num_matrices_entry.get())
+                self.rows = int(self.rows_entry.get())
+                self.cols = int(self.cols_entry.get())
+            except:
+                self.num_matrices = self.rows = self.cols = None
+
+    dialog = MatrixConfigDialog(root, title="Matrix Addition Config")
+
+    num_matrices = dialog.num_matrices
+    rows = dialog.rows
+    cols = dialog.cols
+
+    if not num_matrices or num_matrices < 2 or not rows or not cols or rows < 1 or cols < 1:
+        return
+
+    # Create entry grids
+    for m in range(num_matrices):
+        lf = tk.LabelFrame(matrix_input_frame, text=f"Matrix {m+1}")
+        lf.pack(padx=5, pady=5)
+        entries = []
+        for r in range(rows):
+            row_entries = []
+            for c in range(cols):
+                e = tk.Entry(lf, width=9,font=('Arial',16) ,justify='center')
+                e.grid(row=r, column=c, padx=2, pady=2)
+
+                # Arrow keys support
+                def move(event, row=r, col=c, entries=entries):
+                    if event.keysym == 'Up' and row > 0:
+                        entries[row-1][col].focus_set()
+                    elif event.keysym == 'Down' and row < len(entries)-1:
+                        entries[row+1][col].focus_set()
+                    elif event.keysym == 'Left' and col > 0:
+                        entries[row][col-1].focus_set()
+                    elif event.keysym == 'Right' and col < len(entries[row])-1:
+                        entries[row][col+1].focus_set()
+                e.bind('<KeyPress>', move)
+
+                row_entries.append(e)
+            entries.append(row_entries)
+        matrix_entries.append(entries)
+
+    # Evaluate button
+    eval_btn = tk.Button(matrix_input_frame, text="Evaluate Addition", font=('Arial',16),
+                         command=lambda: evaluate_addition(num_matrices, rows, cols))
+    eval_btn.pack(pady=10)
+saved_result=None
+def evaluate_addition(num_matrices, rows, cols):
+    global matrix_entries, saved_result_matrix
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+    # Validate and collect data
+    matrices = []
+    has_error = False
+    for entries in matrix_entries:
+        mat = []
+        for row in entries:
+            row_data = []
+            for e in row:
+                value = e.get()
+                try:
+                    num = float(value)
+                    e.config(bg='white')
+                    row_data.append(num)
+                except:
+                    e.config(bg='red')
+                    has_error = True
+            mat.append(row_data)
+        matrices.append(mat)
+
+    if has_error:
+        messagebox.showerror("Input Error", "Please correct red fields (invalid numbers).")
+        return
+
+    # Calculate sum
+    result = [[0]*cols for _ in range(rows)]
+    for mat in matrices:
+        for r in range(rows):
+            for c in range(cols):
+                result[r][c] += mat[r][c]
+
+    # Save the result
+    saved_result_matrix = result
+
+    # Show result
+    lf = tk.LabelFrame(result_frame, text="Result")
+    lf.pack()
+    for r in range(rows):
+        for c in range(cols):
+            e = tk.Entry(lf, width=9,font=('Arial',16) ,justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            e.insert(0, str(result[r][c]))
+            e.config(state='readonly')
+
+# --- Sample minimal setup ---
+
+
+matrix_input_frame = tk.Frame(matrix_frame)
+matrix_input_frame.pack()
+result_frame = tk.Frame(matrix_frame)
+result_frame.pack()
+
+operations_frame = tk.Frame(matrix_frame)
+operations_frame.pack()
+btn_add = tk.Button(operations_frame, text="Add", width=12, font=('Arial',16), command=add_matrices_mode)
+btn_add.grid(row=0, column=0, padx=5)
+
+#subtract
+matrix_entries = []
+matrix_input_frame = tk.Frame(matrix_frame)
+matrix_input_frame.pack(pady=10)
+
+result_frame = tk.Frame(matrix_frame)
+result_frame.pack(pady=10)
+
+def validate_entry(event):
+    entry = event.widget
+    value = entry.get()
+    try:
+        float(value)
+        entry.config(bg='white')
+    except:
+        entry.config(bg='salmon')
+
+def bind_entry_events(entry, entries, r, c, rows, cols):
+    entry.bind("<KeyRelease>", validate_entry)
+    
+    def move_focus(dr, dc):
+        nr, nc = r+dr, c+dc
+        if 0 <= nr < rows and 0 <= nc < cols:
+            entries[nr][nc].focus_set()
+
+    entry.bind("<Up>", lambda e: move_focus(-1, 0))
+    entry.bind("<Down>", lambda e: move_focus(1, 0))
+    entry.bind("<Left>", lambda e: move_focus(0, -1))
+    entry.bind("<Right>", lambda e: move_focus(0, 1))
+
+class MatrixConfigDialog(simpledialog.Dialog):
+    def body(self, master):
+        tk.Label(master, text="Number of rows:").grid(row=0, column=0, sticky='e')
+        tk.Label(master, text="Number of columns:").grid(row=1, column=0, sticky='e')
+
+        self.rows_entry = tk.Entry(master)
+        self.cols_entry = tk.Entry(master)
+
+        self.rows_entry.grid(row=0, column=1)
+        self.cols_entry.grid(row=1, column=1)
+
+        return self.rows_entry
+
+    def apply(self):
+        try:
+            self.rows = int(self.rows_entry.get())
+            self.cols = int(self.cols_entry.get())
+        except:
+            self.rows = self.cols = None
+
+def subtract_matrices_mode():
+    global matrix_entries
+    matrix_entries.clear()
+
+    for widget in matrix_input_frame.winfo_children():
+        widget.destroy()
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+    dialog = MatrixConfigDialog(root, title="Matrix Subtraction Config")
+    rows, cols = dialog.rows, dialog.cols
+
+    if not rows or not cols or rows < 1 or cols < 1:
+        return
+
+    num_matrices = 2
+
+    for m in range(num_matrices):
+        lf = tk.LabelFrame(matrix_input_frame, text=f"Matrix {m+1}")
+        lf.pack(padx=5, pady=5)
+        entries = []
+        for r in range(rows):
+            row_entries = []
+            for c in range(cols):
+                e = tk.Entry(lf, width=9,font=('Arial',16) ,justify='center')
+                e.grid(row=r, column=c, padx=2, pady=2)
+                bind_entry_events(e, entries, r, c, rows, cols)
+                row_entries.append(e)
+            entries.append(row_entries)
+        matrix_entries.append(entries)
+
+    eval_btn = tk.Button(matrix_input_frame, text="Evaluate Subtraction", font=('Arial',16),
+                         command=lambda: evaluate_subtraction(rows, cols))
+    eval_btn.pack(pady=10)
+def evaluate_subtraction(rows, cols):
+    global matrix_entries, saved_result_matrix
+    try:
+        # Validate and get values
+        m1 = []
+        m2 = []
+        has_error = False
+
+        for i, entries in enumerate(matrix_entries):
+            mat = []
+            for row in entries:
+                row_data = []
+                for e in row:
+                    value = e.get()
+                    try:
+                        num = float(value)
+                        e.config(bg='white')
+                        row_data.append(num)
+                    except:
+                        e.config(bg='red')
+                        has_error = True
+                mat.append(row_data)
+            if i == 0:
+                m1 = mat
+            else:
+                m2 = mat
+
+        if has_error:
+            messagebox.showerror("Input Error", "Please correct red fields (invalid numbers).")
+            return
+
+        result = [[m1[r][c] - m2[r][c] for c in range(cols)] for r in range(rows)]
+
+        # Save result
+        saved_result_matrix = result
+
+        # Show result
+        for widget in result_frame.winfo_children():
+            widget.destroy()
+
+        lf = tk.LabelFrame(result_frame, text="Result")
+        lf.pack()
+        for r in range(rows):
+            for c in range(cols):
+                e = tk.Entry(lf, width=9,font=('Arial',16) ,justify='center')
+                e.grid(row=r, column=c, padx=2, pady=2)
+                e.insert(0, str(result[r][c]))
+                e.config(state='readonly')
+
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
+
+
+# --- ADD BUTTONS ---
+btn_subtract = tk.Button(operations_frame, text="Subtract", width=12, font=('Arial',16), command=subtract_matrices_mode)
+btn_subtract.grid(row=0, column=1, padx=5)
+def load_saved_result_as_input():
+    global saved_result_matrix, matrix_entries
+
+    if saved_result_matrix is None:
+        messagebox.showinfo("No Saved Result", "There is no saved result to load.")
+        return
+
+    # Clear current inputs
+    for widget in matrix_input_frame.winfo_children():
+        widget.destroy()
+
+    rows = len(saved_result_matrix)
+    cols = len(saved_result_matrix[0])
+
+    entries = []
+    lf = tk.LabelFrame(matrix_input_frame, text="Loaded Matrix")
+    lf.pack(padx=5, pady=5)
+    for r in range(rows):
+        row_entries = []
+        for c in range(cols):
+            e = tk.Entry(lf, width=9,font=('Arial',16) ,justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            e.insert(0, str(saved_result_matrix[r][c]))
+            row_entries.append(e)
+        entries.append(row_entries)
+
+    matrix_entries.clear()
+
+saved_result_matrix = None
+def use_result_with_new_matrix():
+    global saved_result_matrix, matrix_entries
+
+    if saved_result_matrix is None:
+        messagebox.showinfo("No Saved Result", "There is no saved result to load.")
+        return
+
+    # Clear current inputs and result
+    for widget in matrix_input_frame.winfo_children():
+        widget.destroy()
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+    rows = len(saved_result_matrix)
+    cols = len(saved_result_matrix[0])
+
+    matrix_entries.clear()
+
+    # Matrix 1: saved result (readonly)
+    lf1 = tk.LabelFrame(matrix_input_frame, text="Matrix 1 (Saved Result)")
+    lf1.pack(padx=5, pady=5)
+    entries1 = []
+    for r in range(rows):
+        row_entries = []
+        for c in range(cols):
+            e = tk.Entry(lf1, width=9,font=('Arial',16) ,justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            e.insert(0, str(saved_result_matrix[r][c]))
+            e.config(state='readonly')
+            row_entries.append(e)
+        entries1.append(row_entries)
+    matrix_entries.append(entries1)
+
+    # Matrix 2: new input
+    lf2 = tk.LabelFrame(matrix_input_frame, text="Matrix 2 (New Input)")
+    lf2.pack(padx=5, pady=5)
+    entries2 = []
+    for r in range(rows):
+        row_entries = []
+        for c in range(cols):
+            e = tk.Entry(lf2, width=9,font=('Arial',16) ,justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            bind_entry_events(e, entries2, r, c, rows, cols)
+            row_entries.append(e)
+        entries2.append(row_entries)
+    matrix_entries.append(entries2)
+
+    # Buttons to do addition or subtraction
+    btn_frame = tk.Frame(matrix_input_frame)
+    btn_frame.pack(pady=10)
+
+    btn_add_new = tk.Button(btn_frame, text="Add", font=('Arial',16),
+                            command=lambda: evaluate_saved_plus_input(rows, cols))
+    btn_add_new.pack(side='left', padx=5)
+
+    btn_sub_new = tk.Button(btn_frame, text="Subtract", font=('Arial',16),
+                            command=lambda: evaluate_saved_minus_input(rows, cols))
+    btn_sub_new.pack(side='left', padx=5)
+def evaluate_saved_plus_input(rows, cols):
+    global matrix_entries, saved_result_matrix
+    new_matrix_entries = matrix_entries[1]
+    has_error = False
+
+    new_matrix = []
+    for row in new_matrix_entries:
+        row_data = []
+        for e in row:
+            value = e.get()
+            try:
+                num = float(value)
+                e.config(bg='white')
+                row_data.append(num)
+            except:
+                e.config(bg='red')
+                has_error = True
+        new_matrix.append(row_data)
+
+    if has_error:
+        messagebox.showerror("Input Error", "Please correct red fields.")
+        return
+
+    result = [[saved_result_matrix[r][c] + new_matrix[r][c] for c in range(cols)] for r in range(rows)]
+    saved_result_matrix = result
+
+    show_result_matrix(result)
+def evaluate_saved_minus_input(rows, cols):
+    global matrix_entries, saved_result_matrix
+    new_matrix_entries = matrix_entries[1]
+    has_error = False
+
+    new_matrix = []
+    for row in new_matrix_entries:
+        row_data = []
+        for e in row:
+            value = e.get()
+            try:
+                num = float(value)
+                e.config(bg='white')
+                row_data.append(num)
+            except:
+                e.config(bg='red')
+                has_error = True
+        new_matrix.append(row_data)
+
+    if has_error:
+        messagebox.showerror("Input Error", "Please correct red fields.")
+        return
+
+    result = [[saved_result_matrix[r][c] - new_matrix[r][c] for c in range(cols)] for r in range(rows)]
+    saved_result_matrix = result
+
+    show_result_matrix(result)
+def show_result_matrix(result):
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+    rows = len(result)
+    cols = len(result[0])
+
+    lf = tk.LabelFrame(result_frame, text="Result")
+    lf.pack()
+    for r in range(rows):
+        for c in range(cols):
+            e = tk.Entry(lf, width=9,font=('Arial',16) ,justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            e.insert(0, str(result[r][c]))
+            e.config(state='readonly')
+btn_use_result = tk.Button(operations_frame, text="Use Result as Input", width=18, font=('Arial',16),
+                           command=use_result_with_new_matrix)
+btn_use_result.grid(row=0, column=2, padx=5)
+
+#multiply
+
+def multiply_matrices_mode():
+    global matrix_entries
+    matrix_entries.clear()
+
+    # Clear UI
+    for widget in matrix_input_frame.winfo_children():
+        widget.destroy()
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+    # Ask dimensions (Matrix A: rows_A x cols_A, Matrix B: cols_A x cols_B)
+    class MatrixMultiplyConfig(simpledialog.Dialog):
+        def body(self, master):
+            tk.Label(master, text="Matrix A rows:").grid(row=0, column=0, sticky='e')
+            tk.Label(master, text="Matrix A columns / Matrix B rows:").grid(row=1, column=0, sticky='e')
+            tk.Label(master, text="Matrix B columns:").grid(row=2, column=0, sticky='e')
+
+            self.rows_a_entry = tk.Entry(master)
+            self.cols_a_entry = tk.Entry(master)
+            self.cols_b_entry = tk.Entry(master)
+
+            self.rows_a_entry.grid(row=0, column=1)
+            self.cols_a_entry.grid(row=1, column=1)
+            self.cols_b_entry.grid(row=2, column=1)
+            return self.rows_a_entry
+
+        def apply(self):
+            try:
+                self.rows_a = int(self.rows_a_entry.get())
+                self.cols_a = int(self.cols_a_entry.get())
+                self.cols_b = int(self.cols_b_entry.get())
+            except:
+                self.rows_a = self.cols_a = self.cols_b = None
+
+    dialog = MatrixMultiplyConfig(root, title="Matrix Multiplication Config")
+
+    rows_a, cols_a, cols_b = dialog.rows_a, dialog.cols_a, dialog.cols_b
+    if not rows_a or not cols_a or not cols_b or rows_a < 1 or cols_a < 1 or cols_b < 1:
+        return
+
+    num_matrices = 2  # Matrix A and Matrix B
+
+    # Create entry fields
+    shapes = [(rows_a, cols_a), (cols_a, cols_b)]
+    for m in range(num_matrices):
+        lf = tk.LabelFrame(matrix_input_frame, text=f"Matrix {m+1}")
+        lf.pack(padx=5, pady=5)
+        entries = []
+        rows, cols = shapes[m]
+        for r in range(rows):
+            row_entries = []
+            for c in range(cols):
+                e = tk.Entry(lf, width=9,font=('Arial',16) ,justify='center')
+                e.grid(row=r, column=c, padx=2, pady=2)
+                bind_entry_events(e, entries, r, c, rows, cols)
+                row_entries.append(e)
+            entries.append(row_entries)
+        matrix_entries.append(entries)
+
+    eval_btn = tk.Button(matrix_input_frame, text="Evaluate Multiplication", font=('Arial',16),
+                         command=lambda: evaluate_multiplication(rows_a, cols_a, cols_b))
+    eval_btn.pack(pady=10)
+def evaluate_multiplication(rows_a, cols_a, cols_b):
+    global matrix_entries, last_result_matrix
+    try:
+        # Validate entries and highlight errors
+        matrices = []
+        has_error = False
+        for entries in matrix_entries:
+            mat = []
+            for row in entries:
+                row_data = []
+                for e in row:
+                    value = e.get()
+                    try:
+                        num = float(value)
+                        e.config(bg='white')
+                        row_data.append(num)
+                    except:
+                        e.config(bg='red')
+                        has_error = True
+                mat.append(row_data)
+            matrices.append(mat)
+        if has_error:
+            messagebox.showerror("Input Error", "Please correct red fields.")
+            return
+
+        m1, m2 = matrices
+        # Multiply m1 (rows_a x cols_a) * m2 (cols_a x cols_b)
+        result = [[0]*cols_b for _ in range(rows_a)]
+        for i in range(rows_a):
+            for j in range(cols_b):
+                for k in range(cols_a):
+                    result[i][j] += m1[i][k] * m2[k][j]
+
+        last_result_matrix = result  # Save for next operation
+
+        # Display result
+        for widget in result_frame.winfo_children():
+            widget.destroy()
+
+        lf = tk.LabelFrame(result_frame, text="Result")
+        lf.pack()
+        for r in range(rows_a):
+            for c in range(cols_b):
+                e = tk.Entry(lf, width=9,font=('Arial',16) ,justify='center')
+                e.grid(row=r, column=c, padx=2, pady=2)
+                e.insert(0, str(result[r][c]))
+                e.config(state='readonly')
+
+        # Add button to use result
+        use_btn = tk.Button(result_frame, text="Use Result as Input", font=('Arial',14),
+                            command=lambda: use_result_in_multiplication(result))
+        use_btn.pack(pady=5)
+    except Exception as e:
+        messagebox.showerror("Error", str(e))
+
+def use_result_in_multiplication(result_matrix):
+    global matrix_entries
+    matrix_entries.clear()
+    for widget in matrix_input_frame.winfo_children():
+        widget.destroy()
+    for widget in result_frame.winfo_children():
+        widget.destroy()
+
+    rows = len(result_matrix)
+    cols = len(result_matrix[0])
+
+    # Use result as Matrix A; ask user for Matrix B columns
+    cols_b = simpledialog.askinteger("Matrix B columns", "Enter number of columns for new Matrix B:")
+    if not cols_b or cols_b < 1:
+        return
+
+    # Matrix A (result) entries
+    lf1 = tk.LabelFrame(matrix_input_frame, text="Matrix A (Previous Result)")
+    lf1.pack(padx=5, pady=5)
+    entries_a = []
+    for r in range(rows):
+        row_entries = []
+        for c in range(cols):
+            e = tk.Entry(lf1, width=9,font=('Arial',16) ,justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            e.insert(0, str(result_matrix[r][c]))
+            e.config(state='readonly')
+            row_entries.append(e)
+        entries_a.append(row_entries)
+    matrix_entries.append(entries_a)
+
+    # Matrix B (user input)
+    lf2 = tk.LabelFrame(matrix_input_frame, text="Matrix B")
+    lf2.pack(padx=5, pady=5)
+    entries_b = []
+    for r in range(cols):  # rows=cols of A
+        row_entries = []
+        for c in range(cols_b):
+            e = tk.Entry(lf2, width=9,font=('Arial',16) ,justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            bind_entry_events(e, entries_b, r, c, cols, cols_b)
+            row_entries.append(e)
+        entries_b.append(row_entries)
+    matrix_entries.append(entries_b)
+
+    eval_btn = tk.Button(matrix_input_frame, text="Evaluate Multiplication", font=('Arial',16),
+                         command=lambda: evaluate_multiplication(rows, cols, cols_b))
+    eval_btn.pack(pady=10)
+btn_multiply = tk.Button(operations_frame, text="Multiply", width=12, font=('Arial',16), command=multiply_matrices_mode)
+btn_multiply.grid(row=0, column=3, padx=5)
+last_result_matrix = None  
+#determinant mode
+# Frame for determinaNTS
+operations_frame = tk.Frame(Determinant_frame)
+operations_frame.pack(pady=10)
+
+det_input_frame = tk.Frame(Determinant_frame)
+det_input_frame.pack(pady=10)
+
+det_buttons_frame = tk.Frame(Determinant_frame)
+det_buttons_frame.pack(pady=10)
+
+det_result_frame = tk.Frame(Determinant_frame)
+det_result_frame.pack(pady=10)
+
+# --- HELPERS ---
+def bind_entry_events(e, entries, r, c, rows, cols):
+    def on_key(event):
+        if event.keysym == 'Up' and r > 0:
+            entries[r-1][c].focus_set()
+            return 'break'
+        elif event.keysym == 'Down' and r < rows-1:
+            entries[r+1][c].focus_set()
+            return 'break'
+        elif event.keysym == 'Left' and c > 0:
+            entries[r][c-1].focus_set()
+            return 'break'
+        elif event.keysym == 'Right' and c < cols-1:
+            entries[r][c+1].focus_set()
+            return 'break'
+        elif event.keysym in ('Return', 'Tab'):
+            next_r, next_c = r, c+1
+            if next_c >= cols:
+                next_c = 0
+                next_r += 1
+            if next_r < rows:
+                entries[next_r][next_c].focus_set()
+            return 'break'
+        return None
+
+    def on_validate(event):
+        value = e.get()
+        if value.strip() == '':
+            e.config(bg='white')
+            return
+        try:
+            float(value)
+            e.config(bg='white')
+        except:
+            e.config(bg='red')
+
+    e.bind('<KeyPress>', on_key)
+    e.bind('<KeyRelease>', on_validate)
+    e.bind('<FocusOut>', on_validate)
+
+def get_matrix_from_entries(entries):
+    has_error = False
+    matrix = []
+    for row in entries:
+        row_data = []
+        for e in row:
+            try:
+                num = float(e.get())
+                e.config(bg='white')
+                row_data.append(num)
+            except:
+                e.config(bg='red')
+                has_error = True
+        matrix.append(row_data)
+    return matrix, has_error
+
+def show_result_matrix(result):
+    for widget in det_result_frame.winfo_children():
+        widget.destroy()
+    rows = len(result)
+    cols = len(result[0])
+    lf = tk.LabelFrame(det_result_frame, text="Result")
+    lf.pack()
+    for r in range(rows):
+        for c in range(cols):
+            e = tk.Entry(lf, width=9, font=('Arial',16), justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            e.insert(0, str(result[r][c]))
+            e.config(state='readonly')
+
+def compute_determinant(matrix):
+    size = len(matrix)
+    if size == 1:
+        return matrix[0][0]
+    if size == 2:
+        return matrix[0][0]*matrix[1][1] - matrix[0][1]*matrix[1][0]
+    det = 0
+    for c in range(size):
+        minor = [row[:c]+row[c+1:] for row in matrix[1:]]
+        det += ((-1)**c) * matrix[0][c] * compute_determinant(minor)
+    return det
+
+def compute_adjoint(matrix):
+    size = len(matrix)
+    adj = [[0]*size for _ in range(size)]
+    for i in range(size):
+        for j in range(size):
+            minor = [row[:j]+row[j+1:] for k,row in enumerate(matrix) if k != i]
+            sign = (-1) ** (i + j)
+            adj[j][i] = sign * compute_determinant(minor)
+    return adj
+
+# --- MAIN MODE ---
+def determinant_mode():
+    global matrix_entries
+    matrix_entries.clear()
+
+    # clear old widgets
+    for frame in (det_input_frame, det_buttons_frame, det_result_frame):
+        for w in frame.winfo_children():
+            w.destroy()
+
+    # ask size
+    size = simpledialog.askinteger("Matrix Size", "Enter size of square matrix (2,3,4...):", parent=root)
+    if not size or size < 1:
+        return
+
+    # build matrix input grid
+    lf = tk.LabelFrame(det_input_frame, text="Matrix")
+    lf.pack(padx=5, pady=5)
+    entries = []
+    for r in range(size):
+        row_entries = []
+        for c in range(size):
+            e = tk.Entry(lf, width=9, font=('Arial',16), justify='center')
+            e.grid(row=r, column=c, padx=2, pady=2)
+            bind_entry_events(e, entries, r, c, size, size)
+            row_entries.append(e)
+        entries.append(row_entries)
+    matrix_entries.append(entries)
+
+    # build buttons (once)
+    btn_specs = [
+        ("Determinant", lambda: evaluate_determinant(size)),
+        ("Adjoint", lambda: evaluate_adjoint(size)),
+        ("Inverse", lambda: evaluate_inverse(size)),
+        ("Transpose", lambda: evaluate_transpose(size, size)),
+    ]
+    for text, cmd in btn_specs:
+        tk.Button(det_buttons_frame, text=text, font=('Arial',14), command=cmd)\
+            .pack(side='left', padx=5, pady=5)
+
+# --- EVALUATE FUNCTIONS ---
+def evaluate_determinant(size):
+    entries = matrix_entries[0]
+    matrix, has_error = get_matrix_from_entries(entries)
+    if has_error:
+        messagebox.showerror("Input Error", "Please correct red fields.")
+        return
+    det = compute_determinant(matrix)
+    show_result_matrix([[det]])
+
+def evaluate_adjoint(size):
+    entries = matrix_entries[0]
+    matrix, has_error = get_matrix_from_entries(entries)
+    if has_error:
+        messagebox.showerror("Input Error", "Please correct red fields.")
+        return
+    adj = compute_adjoint(matrix)
+    show_result_matrix(adj)
+
+def evaluate_inverse(size):
+    entries = matrix_entries[0]
+    matrix, has_error = get_matrix_from_entries(entries)
+    if has_error:
+        messagebox.showerror("Input Error", "Please correct red fields.")
+        return
+    det = compute_determinant(matrix)
+    if det == 0:
+        messagebox.showerror("Math Error", "Matrix is singular, cannot compute inverse.")
+        return
+    adj = compute_adjoint(matrix)
+    inverse = [[adj[r][c]/det for c in range(size)] for r in range(size)]
+    show_result_matrix(inverse)
+
+def evaluate_transpose(rows, cols):
+    entries = matrix_entries[0]
+    matrix, has_error = get_matrix_from_entries(entries)
+    if has_error:
+        messagebox.showerror("Input Error", "Please correct red fields.")
+        return
+    transposed = [[matrix[r][c] for r in range(rows)] for c in range(cols)]
+    show_result_matrix(transposed)
+
+# --- OPEN MODE BUTTON ---
+btn_open_mode = tk.Button(operations_frame, text="ENTER THE CONFIGURATION OF THE MATRIX", width=40, font=('Arial',16),
+                          command=determinant_mode)
+btn_open_mode.pack(pady=5)
+
+#progression mode
+class ProgressionMode(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent, bd=3, relief='ridge', padx=15, pady=15, bg="#f8f9fa")
+
+        tk.Label(self, text="Progression Mode", font=("Arial", 18, 'bold'), bg="#f8f9fa").pack(pady=8)
+
+        # --- BUTTONS ---
+        btn_frame = tk.Frame(self, bg="#f8f9fa")
+        btn_frame.pack(pady=10)
+
+        style = {'width': 16, 'height': 2, 'bg': '#007BFF', 'fg': 'white', 'font': ('Arial', 11, 'bold'), 'relief':'raised'}
+
+        tk.Button(btn_frame, text="AP", command=self.load_ap, **style).grid(row=0, column=0, padx=8, pady=5)
+        tk.Button(btn_frame, text="GP", command=self.load_gp, **style).grid(row=0, column=1, padx=8, pady=5)
+        tk.Button(btn_frame, text="HP", command=self.load_hp, **style).grid(row=0, column=2, padx=8, pady=5)
+        tk.Button(btn_frame, text="Special Series", command=self.load_special, **style).grid(row=0, column=3, padx=8, pady=5)
+
+        # --- Tool area ---
+        self.sub_frame = tk.Frame(self, bg="#f8f9fa")
+        self.sub_frame.pack(pady=15)
+
+    def clear_sub_frame(self):
+        for widget in self.sub_frame.winfo_children():
+            widget.destroy()
+
+    def load_ap(self):
+        self.clear_sub_frame()
+        APTool(self.sub_frame).pack()
+
+    def load_gp(self):
+        self.clear_sub_frame()
+        GPTool(self.sub_frame).pack()
+
+    def load_hp(self):
+        self.clear_sub_frame()
+        HPTool(self.sub_frame).pack()
+
+    def load_special(self):
+        self.clear_sub_frame()
+        SpecialSeriesTool(self.sub_frame).pack()
+
+
+# ------------------------------
+# AP Tool with clean OR layout
+# ------------------------------
+class APTool(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent, bd=2, relief='ridge', padx=10, pady=10)
+
+        tk.Label(self, text="AP Tool", font=("Arial", 14, 'bold')).pack(pady=5)
+
+        # --- Find missing parameter ---
+        part1 = tk.LabelFrame(self, text="Find missing parameter (leave one blank)")
+        part1.pack(padx=5, pady=5, fill='x')
+
+        self.a_entry = self.add_labeled_entry(part1, "First Term (a):", 0)
+        self.l_entry = self.add_labeled_entry(part1, "Last Term (l):", 1)
+        self.d_entry = self.add_labeled_entry(part1, "Common Difference (d):", 2)
+        self.n_entry = self.add_labeled_entry(part1, "Number of Terms (n):", 3)
+
+        tk.Button(part1, text="Find", command=self.find_missing_param).grid(row=4, column=0, columnspan=2, pady=5)
+
+        tk.Label(self, text="────────── OR ──────────").pack(pady=5)
+
+        # --- Find sum of series ---
+        part_sum = tk.LabelFrame(self, text="Find sum of series (needs a, d, n)")
+        part_sum.pack(padx=5, pady=5, fill='x')
+
+        self.sum_a_entry = self.add_labeled_entry(part_sum, "First Term (a):", 0)
+        self.sum_d_entry = self.add_labeled_entry(part_sum, "Common Difference (d):", 1)
+        self.sum_n_entry = self.add_labeled_entry(part_sum, "Number of Terms (n):", 2)
+
+        tk.Button(part_sum, text="Find Sum", command=self.find_sum).grid(row=3, column=0, columnspan=2, pady=5)
+
+        tk.Label(self, text="────────── OR ──────────").pack(pady=5)
+
+        # --- Generate AP series ---
+        part2 = tk.LabelFrame(self, text="Generate AP Series")
+        part2.pack(padx=5, pady=5, fill='x')
+
+        self.gen_a_entry = self.add_labeled_entry(part2, "First Term (a):", 0)
+        self.gen_d_entry = self.add_labeled_entry(part2, "Common Difference (d):", 1)
+        self.gen_n_entry = self.add_labeled_entry(part2, "Number of Terms (n):", 2)
+
+        tk.Button(part2, text="Generate Series", command=self.generate_series).grid(row=3, column=0, columnspan=2, pady=5)
+
+        # --- Output ---
+        tk.Label(self, text="Output:").pack(anchor='w')
+        self.output_text = tk.Text(self, height=10, width=60, wrap='word')
+        self.output_text.pack(pady=5)
+
+    def add_labeled_entry(self, parent, label_text, row):
+        tk.Label(parent, text=label_text).grid(row=row, column=0, sticky='w', padx=5, pady=2)
+        entry = tk.Entry(parent, width=15)
+        entry.grid(row=row, column=1, pady=2)
+        return entry
+
+    def get_float(self, entry, default=0):
+        try: return float(entry.get())
+        except: return default
+
+    def get_int(self, entry, default=0):
+        try: return int(entry.get())
+        except: return default
+
+    def show_output(self, text):
+        self.output_text.delete('1.0', tk.END)
+        self.output_text.insert(tk.END, text)
+
+    def find_missing_param(self):
+        a = self.get_float(self.a_entry)
+        l = self.get_float(self.l_entry)
+        d = self.get_float(self.d_entry)
+        n = self.get_float(self.n_entry)
+
+        fields = [self.a_entry.get(), self.l_entry.get(), self.d_entry.get(), self.n_entry.get()]
+        empty_indices = [i for i, val in enumerate(fields) if val.strip() == '']
+
+        if len(empty_indices) != 1:
+            self.show_output("Please leave exactly ONE field empty to find it.")
+            return
+
+        missing = empty_indices[0]
+
+        try:
+            if missing == 0:  # find a
+                a = l - (n-1)*d
+                self.show_output(f"First term (a) = {a}")
+            elif missing == 1:  # find l
+                l = a + (n-1)*d
+                self.show_output(f"Last term (l) = {l}")
+            elif missing == 2:  # find d
+                if n > 1:
+                    d = (l - a) / (n-1)
+                    self.show_output(f"Common difference (d) = {d}")
+                else:
+                    self.show_output("Number of terms must be >1 to find d.")
+            elif missing == 3:  # find n
+                if d != 0:
+                    n = ((l - a) / d) + 1
+                    self.show_output(f"Number of terms (n) = {int(n)}")
+                else:
+                    self.show_output("Common difference cannot be zero to find n.")
+        except Exception as e:
+            self.show_output(f"Error calculating: {e}")
+
+    def find_sum(self):
+        a = self.get_float(self.sum_a_entry)
+        d = self.get_float(self.sum_d_entry)
+        n = self.get_float(self.sum_n_entry)
+
+        if n > 0:
+            S = n / 2 * (2 * a + (n - 1) * d)
+            self.show_output(f"Sum of AP series (S) = {S}")
+        else:
+            self.show_output("Number of terms must be >0 to find sum.")
+
+    def generate_series(self):
+        a = self.get_float(self.gen_a_entry)
+        d = self.get_float(self.gen_d_entry)
+        n = self.get_int(self.gen_n_entry)
+
+        try:
+            series = [a + i*d for i in range(n)]
+            self.show_output("AP Series:\n" + ', '.join(map(str, series)))
+        except Exception as e:
+            self.show_output(f"Error generating series: {e}")
+class GPTool(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent, bd=2, relief='ridge', padx=10, pady=10)
+
+        tk.Label(self, text="GP Tool", font=("Arial", 14, 'bold')).pack(pady=5)
+
+        # --- Find missing parameter ---
+        part1 = tk.LabelFrame(self, text="Find missing parameter (leave one blank)")
+        part1.pack(padx=5, pady=5, fill='x')
+
+        self.a_entry = self.add_labeled_entry(part1, "First Term (a):", 0)
+        self.l_entry = self.add_labeled_entry(part1, "Last Term (l):", 1)
+        self.r_entry = self.add_labeled_entry(part1, "Common Ratio (r):", 2)
+        self.n_entry = self.add_labeled_entry(part1, "Number of Terms (n):", 3)
+
+        tk.Button(part1, text="Find", command=self.find_missing_param).grid(row=4, column=0, columnspan=2, pady=5)
+
+        tk.Label(self, text="────────── OR ──────────").pack(pady=5)
+
+        # --- Find sum of series ---
+        part_sum = tk.LabelFrame(self, text="Find sum of series (needs a, r, n)")
+        part_sum.pack(padx=5, pady=5, fill='x')
+
+        self.sum_a_entry = self.add_labeled_entry(part_sum, "First Term (a):", 0)
+        self.sum_r_entry = self.add_labeled_entry(part_sum, "Common Ratio (r):", 1)
+        self.sum_n_entry = self.add_labeled_entry(part_sum, "Number of Terms (n):", 2)
+
+        tk.Button(part_sum, text="Find Sum", command=self.find_sum).grid(row=3, column=0, columnspan=2, pady=5)
+
+        tk.Label(self, text="────────── OR ──────────").pack(pady=5)
+
+        # --- Generate GP series ---
+        part2 = tk.LabelFrame(self, text="Generate GP Series")
+        part2.pack(padx=5, pady=5, fill='x')
+
+        self.gen_a_entry = self.add_labeled_entry(part2, "First Term (a):", 0)
+        self.gen_r_entry = self.add_labeled_entry(part2, "Common Ratio (r):", 1)
+        self.gen_n_entry = self.add_labeled_entry(part2, "Number of Terms (n):", 2)
+
+        tk.Button(part2, text="Generate Series", command=self.generate_series).grid(row=3, column=0, columnspan=2, pady=5)
+
+        # --- Output ---
+        tk.Label(self, text="Output:").pack(anchor='w')
+        self.output_text = tk.Text(self, height=10, width=60, wrap='word')
+        self.output_text.pack(pady=5)
+
+    def add_labeled_entry(self, parent, label_text, row):
+        tk.Label(parent, text=label_text).grid(row=row, column=0, sticky='w', padx=5, pady=2)
+        entry = tk.Entry(parent, width=15)
+        entry.grid(row=row, column=1, pady=2)
+        return entry
+
+    def get_float(self, entry, default=0):
+        try: return float(entry.get())
+        except: return default
+
+    def get_int(self, entry, default=0):
+        try: return int(entry.get())
+        except: return default
+
+    def show_output(self, text):
+        self.output_text.delete('1.0', tk.END)
+        self.output_text.insert(tk.END, text)
+
+    def find_missing_param(self):
+        a = self.get_float(self.a_entry)
+        l = self.get_float(self.l_entry)
+        r = self.get_float(self.r_entry)
+        n = self.get_float(self.n_entry)
+
+        fields = [self.a_entry.get(), self.l_entry.get(), self.r_entry.get(), self.n_entry.get()]
+        empty_indices = [i for i, val in enumerate(fields) if val.strip() == '']
+
+        if len(empty_indices) != 1:
+            self.show_output("Please leave exactly ONE field empty to find it.")
+            return
+
+        missing = empty_indices[0]
+
+        try:
+            if missing == 0:  # find a
+                if r != 0:
+                    a = l / (r ** (n - 1))
+                    self.show_output(f"First term (a) = {a}")
+                else:
+                    self.show_output("Common ratio cannot be zero.")
+            elif missing == 1:  # find l
+                l = a * (r ** (n - 1))
+                self.show_output(f"Last term (l) = {l}")
+            elif missing == 2:  # find r
+                if a != 0 and n > 1:
+                    r = (l / a) ** (1 / (n - 1))
+                    self.show_output(f"Common ratio (r) = {r}")
+                else:
+                    self.show_output("Cannot find r: check a≠0 and n>1.")
+            elif missing == 3:  # find n
+                if a != 0 and r != 0:
+                    import math
+                    n = math.log(l / a, r) + 1
+                    self.show_output(f"Number of terms (n) ≈ {int(round(n))}")
+                else:
+                    self.show_output("Cannot find n: check a≠0 and r≠0.")
+        except Exception as e:
+            self.show_output(f"Error calculating: {e}")
+
+    def find_sum(self):
+        a = self.get_float(self.sum_a_entry)
+        r = self.get_float(self.sum_r_entry)
+        n = self.get_float(self.sum_n_entry)
+
+        try:
+            if r == 1:
+                S = a * n
+            else:
+                S = a * (1 - r ** n) / (1 - r)
+            self.show_output(f"Sum of GP series (S) = {S}")
+        except Exception as e:
+            self.show_output(f"Error calculating sum: {e}")
+
+    def generate_series(self):
+        a = self.get_float(self.gen_a_entry)
+        r = self.get_float(self.gen_r_entry)
+        n = self.get_int(self.gen_n_entry)
+
+        try:
+            series = [a * (r ** i) for i in range(n)]
+            self.show_output("GP Series:\n" + ', '.join(map(str, series)))
+        except Exception as e:
+            self.show_output(f"Error generating series: {e}")
+class HPTool(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent, bd=2, relief='ridge', padx=10, pady=10)
+
+        tk.Label(self, text="HP Tool", font=("Arial", 14, 'bold')).pack(pady=5)
+
+        # --- Find missing parameter ---
+        part1 = tk.LabelFrame(self, text="Find missing parameter (leave one blank)")
+        part1.pack(padx=5, pady=5, fill='x')
+
+        self.a_entry = self.add_labeled_entry(part1, "First Term (a):", 0)
+        self.l_entry = self.add_labeled_entry(part1, "Last Term (l):", 1)
+        self.d_entry = self.add_labeled_entry(part1, "Common Difference (d):", 2)
+        self.n_entry = self.add_labeled_entry(part1, "Number of Terms (n):", 3)
+
+        tk.Button(part1, text="Find", command=self.find_missing_param).grid(row=4, column=0, columnspan=2, pady=5)
+
+        tk.Label(self, text="────────── OR ──────────").pack(pady=5)
+
+        # --- Find sum (approximate) ---
+        part_sum = tk.LabelFrame(self, text="Find sum of series (needs a, d, n)")
+        part_sum.pack(padx=5, pady=5, fill='x')
+
+        self.sum_a_entry = self.add_labeled_entry(part_sum, "First Term (a):", 0)
+        self.sum_d_entry = self.add_labeled_entry(part_sum, "Common Difference (d):", 1)
+        self.sum_n_entry = self.add_labeled_entry(part_sum, "Number of Terms (n):", 2)
+
+        tk.Button(part_sum, text="Find Sum", command=self.find_sum).grid(row=3, column=0, columnspan=2, pady=5)
+
+        tk.Label(self, text="────────── OR ──────────").pack(pady=5)
+
+        # --- Generate HP series ---
+        part2 = tk.LabelFrame(self, text="Generate HP Series")
+        part2.pack(padx=5, pady=5, fill='x')
+
+        self.gen_a_entry = self.add_labeled_entry(part2, "First Term (a):", 0)
+        self.gen_d_entry = self.add_labeled_entry(part2, "Common Difference (d):", 1)
+        self.gen_n_entry = self.add_labeled_entry(part2, "Number of Terms (n):", 2)
+
+        tk.Button(part2, text="Generate Series", command=self.generate_series).grid(row=3, column=0, columnspan=2, pady=5)
+
+        # --- Output ---
+        tk.Label(self, text="Output:").pack(anchor='w')
+        self.output_text = tk.Text(self, height=10, width=60, wrap='word')
+        self.output_text.pack(pady=5)
+
+    def add_labeled_entry(self, parent, label_text, row):
+        tk.Label(parent, text=label_text).grid(row=row, column=0, sticky='w', padx=5, pady=2)
+        entry = tk.Entry(parent, width=15)
+        entry.grid(row=row, column=1, pady=2)
+        return entry
+
+    def get_float(self, entry, default=0):
+        try: return float(entry.get())
+        except: return default
+
+    def get_int(self, entry, default=0):
+        try: return int(entry.get())
+        except: return default
+
+    def show_output(self, text):
+        self.output_text.delete('1.0', tk.END)
+        self.output_text.insert(tk.END, text)
+
+    def find_missing_param(self):
+        a = self.get_float(self.a_entry)
+        l = self.get_float(self.l_entry)
+        d = self.get_float(self.d_entry)
+        n = self.get_float(self.n_entry)
+
+        fields = [self.a_entry.get(), self.l_entry.get(), self.d_entry.get(), self.n_entry.get()]
+        empty_indices = [i for i, val in enumerate(fields) if val.strip() == '']
+
+        if len(empty_indices) != 1:
+            self.show_output("Please leave exactly ONE field empty to find it.")
+            return
+
+        missing = empty_indices[0]
+
+        try:
+            if missing == 0:  # find a
+                a = l - (n-1)*d
+                self.show_output(f"First term (a) = {a}")
+            elif missing == 1:  # find l
+                l = a + (n-1)*d
+                self.show_output(f"Last term (l) = {l}")
+            elif missing == 2:  # find d
+                if n > 1:
+                    d = (l - a) / (n-1)
+                    self.show_output(f"Common difference (d) = {d}")
+                else:
+                    self.show_output("Number of terms must be >1 to find d.")
+            elif missing == 3:  # find n
+                if d != 0:
+                    n = ((l - a) / d) + 1
+                    self.show_output(f"Number of terms (n) = {int(n)}")
+                else:
+                    self.show_output("Common difference cannot be zero to find n.")
+        except Exception as e:
+            self.show_output(f"Error calculating: {e}")
+
+    def find_sum(self):
+        a = self.get_float(self.sum_a_entry)
+        d = self.get_float(self.sum_d_entry)
+        n = self.get_int(self.sum_n_entry)
+
+        try:
+            terms = [a + i*d for i in range(n)]
+            hp_terms = [1/t for t in terms if t != 0]
+            S = sum(hp_terms)
+            self.show_output(f"Approximate sum of HP series = {S}")
+        except Exception as e:
+            self.show_output(f"Error calculating sum: {e}")
+
+    def generate_series(self):
+        a = self.get_float(self.gen_a_entry)
+        d = self.get_float(self.gen_d_entry)
+        n = self.get_int(self.gen_n_entry)
+
+        try:
+            terms = [a + i*d for i in range(n)]
+            hp_terms = [1/t if t != 0 else 'inf' for t in terms]
+            self.show_output("HP Series:\n" + ', '.join(map(str, hp_terms)))
+        except Exception as e:
+            self.show_output(f"Error generating series: {e}")
+class SpecialSeriesTool(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent, bd=2, relief='ridge', padx=10, pady=10)
+
+        tk.Label(self, text="Special Series Tool", font=("Arial", 14, 'bold')).pack(pady=5)
+
+        # --- Buttons for series ---
+        btn_frame = tk.Frame(self)
+        btn_frame.pack(pady=5)
+
+        tk.Button(btn_frame, text="Fibonacci", width=12, command=lambda: self.load_series("fibonacci")).grid(row=0, column=0, padx=5, pady=2)
+        tk.Button(btn_frame, text="Squares", width=12, command=lambda: self.load_series("squares")).grid(row=0, column=1, padx=5, pady=2)
+        tk.Button(btn_frame, text="Cubes", width=12, command=lambda: self.load_series("cubes")).grid(row=0, column=2, padx=5, pady=2)
+        tk.Button(btn_frame, text="Primes", width=12, command=lambda: self.load_series("primes")).grid(row=0, column=3, padx=5, pady=2)
+        tk.Button(btn_frame, text="Factorials", width=12, command=lambda: self.load_series("factorials")).grid(row=1, column=0, padx=5, pady=2)
+
+        # --- Subframe for inputs ---
+        self.sub_frame = tk.Frame(self)
+        self.sub_frame.pack(pady=10)
+
+        # --- Output ---
+        tk.Label(self, text="Output:").pack(anchor='w')
+        self.output_text = tk.Text(self, height=10, width=60, wrap='word')
+        self.output_text.pack(pady=5)
+
+        self.series_type = None  # current series type
+
+    def clear_sub_frame(self):
+        for widget in self.sub_frame.winfo_children():
+            widget.destroy()
+
+    def get_int(self, entry, default=0):
+        try: return int(entry.get())
+        except: return default
+
+    def show_output(self, text):
+        self.output_text.delete('1.0', tk.END)
+        self.output_text.insert(tk.END, text)
+
+    def load_series(self, series_type):
+        self.series_type = series_type
+        self.clear_sub_frame()
+
+        # Number of terms to generate
+        tk.Label(self.sub_frame, text="Number of terms (n):").grid(row=0, column=0, padx=5, pady=2)
+        n_entry = tk.Entry(self.sub_frame, width=10)
+        n_entry.grid(row=0, column=1, padx=5, pady=2)
+        tk.Button(self.sub_frame, text="Generate", command=lambda: self.generate_series(n_entry)).grid(row=0, column=2, padx=5, pady=2)
+
+        # Find nth term
+        tk.Label(self.sub_frame, text="Find nth term (n):").grid(row=1, column=0, padx=5, pady=2)
+        nth_entry = tk.Entry(self.sub_frame, width=10)
+        nth_entry.grid(row=1, column=1, padx=5, pady=2)
+        tk.Button(self.sub_frame, text="Find", command=lambda: self.find_nth_term(nth_entry)).grid(row=1, column=2, padx=5, pady=2)
+
+        # Sum of first m terms
+        tk.Label(self.sub_frame, text="Sum of first m terms (m):").grid(row=2, column=0, padx=5, pady=2)
+        sum_entry = tk.Entry(self.sub_frame, width=10)
+        sum_entry.grid(row=2, column=1, padx=5, pady=2)
+        tk.Button(self.sub_frame, text="Sum", command=lambda: self.sum_of_terms(sum_entry)).grid(row=2, column=2, padx=5, pady=2)
+
+        # Check membership
+        tk.Label(self.sub_frame, text="Check if number belongs:").grid(row=3, column=0, padx=5, pady=2)
+        check_entry = tk.Entry(self.sub_frame, width=10)
+        check_entry.grid(row=3, column=1, padx=5, pady=2)
+        tk.Button(self.sub_frame, text="Check", command=lambda: self.check_term(check_entry)).grid(row=3, column=2, padx=5, pady=2)
+
+    # --- Generate series ---
+    def generate_series(self, n_entry):
+        n = self.get_int(n_entry)
+        if n <= 0:
+            self.show_output("Enter valid n (>0).")
+            return
+
+        series = self.build_series(n)
+        self.show_output(f"{self.series_type.title()} series (first {n} terms):\n" + ', '.join(map(str, series)))
+
+    def build_series(self, n):
+        if self.series_type == "fibonacci":
+            fib = [0, 1]
+            while len(fib) < n:
+                fib.append(fib[-1]+fib[-2])
+            return fib[:n]
+        elif self.series_type == "squares":
+            return [i*i for i in range(1, n+1)]
+        elif self.series_type == "cubes":
+            return [i**3 for i in range(1, n+1)]
+        elif self.series_type == "primes":
+            primes, num = [], 2
+            while len(primes) < n:
+                if all(num % p != 0 for p in primes if p*p <= num):
+                    primes.append(num)
+                num += 1
+            return primes
+        elif self.series_type == "factorials":
+            return [math.factorial(i) for i in range(1, n+1)]
+        else:
+            return []
+
+    # --- Find nth term ---
+    def find_nth_term(self, nth_entry):
+        n = self.get_int(nth_entry)
+        if n <= 0:
+            self.show_output("Enter valid n (>0).")
+            return
+
+        try:
+            if self.series_type == "fibonacci":
+                a,b = 0,1
+                for _ in range(n-1): a,b = b,a+b
+                result = a
+            elif self.series_type == "squares":
+                result = n*n
+            elif self.series_type == "cubes":
+                result = n**3
+            elif self.series_type == "primes":
+                count, num, last_prime = 0, 2, None
+                while count < n:
+                    if all(num % p != 0 for p in range(2,int(num**0.5)+1)):
+                        last_prime = num
+                        count +=1
+                    num +=1
+                result = last_prime
+            elif self.series_type == "factorials":
+                result = math.factorial(n)
+            else:
+                result = "Unknown series"
+            self.show_output(f"{n}th term = {result}")
+        except Exception as e:
+            self.show_output(f"Error: {e}")
+
+    # --- Sum of first m terms ---
+    def sum_of_terms(self, sum_entry):
+        m = self.get_int(sum_entry)
+        if m <= 0:
+            self.show_output("Enter valid m (>0).")
+            return
+
+        try:
+            if self.series_type == "fibonacci":
+                fib = [0,1]
+                while len(fib) < m:
+                    fib.append(fib[-1]+fib[-2])
+                result = sum(fib[:m])
+            elif self.series_type == "squares":
+                result = m*(m+1)*(2*m+1)//6
+            elif self.series_type == "cubes":
+                s = m*(m+1)//2
+                result = s*s
+            elif self.series_type == "primes":
+                primes, num = [], 2
+                while len(primes) < m:
+                    if all(num % p != 0 for p in primes if p*p <= num):
+                        primes.append(num)
+                    num +=1
+                result = sum(primes)
+            elif self.series_type == "factorials":
+                result = sum(math.factorial(i) for i in range(1,m+1))
+            else:
+                result = "Unknown series"
+            self.show_output(f"Sum of first {m} terms = {result}")
+        except Exception as e:
+            self.show_output(f"Error: {e}")
+
+    # --- Check if term belongs ---
+    def check_term(self, check_entry):
+        t = self.get_int(check_entry)
+        if t <= 0:
+            self.show_output("Enter a positive number.")
+            return
+
+        try:
+            if self.series_type == "fibonacci":
+                # A number is Fibonacci if 5*t^2+4 or 5*t^2-4 is a perfect square
+                x = 5*t*t
+                if self.is_perfect_square(x+4) or self.is_perfect_square(x-4):
+                    msg = f"{t} belongs to Fibonacci series."
+                else:
+                    msg = f"{t} does NOT belong to Fibonacci series."
+            elif self.series_type == "squares":
+                if self.is_perfect_square(t):
+                    msg = f"{t} is a square number."
+                else:
+                    msg = f"{t} is NOT a square number."
+            elif self.series_type == "cubes":
+                if round(t**(1/3))**3 == t:
+                    msg = f"{t} is a cube number."
+                else:
+                    msg = f"{t} is NOT a cube number."
+            elif self.series_type == "primes":
+                if t>1 and all(t % i != 0 for i in range(2,int(t**0.5)+1)):
+                    msg = f"{t} is a prime number."
+                else:
+                    msg = f"{t} is NOT a prime number."
+            elif self.series_type == "factorials":
+                i=1; f=1
+                while f<t:
+                    i+=1; f*=i
+                if f==t:
+                    msg = f"{t} is a factorial number ({i}!)."
+                else:
+                    msg = f"{t} is NOT a factorial number."
+            else:
+                msg = "Unknown series"
+            self.show_output(msg)
+        except Exception as e:
+            self.show_output(f"Error: {e}")
+
+    def is_perfect_square(self, x):
+        s = int(math.isqrt(x))
+        return s*s == x
+progression_widget = ProgressionMode(progression_frame)
+progression_widget.pack(padx=10, pady=10)
+
+
+
+
+#programming frame
+
+
+class ProgrammingMode(tk.Frame):
+    def __init__(self, parent):
+        super().__init__(parent)
+        self.input_base = 'DEC'  # default input base
+        self.create_widgets()
+
+    def create_widgets(self):
+        # --- Title ---
+        tk.Label(self, text="Programming Mode", font=("Arial", 18, "bold")).pack(pady=10)
+
+        # --- Base selection buttons ---
+        base_frame = tk.Frame(self)
+        base_frame.pack(pady=5)
+        for base in ['BIN', 'OCT', 'DEC', 'HEX']:
+            btn = tk.Button(base_frame, text=base, width=6, font=("Arial", 12, "bold"),
+                            command=lambda b=base: self.set_base(b))
+            btn.pack(side='left', padx=3)
+        self.base_label = tk.Label(self, text="Current Base: DEC", font=("Arial", 12, "italic"))
+        self.base_label.pack(pady=5)
+
+        # --- Input Entry ---
+        self.input_var = tk.StringVar()
+        input_entry = tk.Entry(self, textvariable=self.input_var, font=("Consolas", 16), width=25, justify='center')
+        input_entry.pack(pady=5)
+        self.input_var.trace_add('write', self.update_conversions)
+
+        # --- Conversion labels ---
+        self.bin_label = tk.Label(self, text="BIN: -", font=("Consolas", 14))
+        self.bin_label.pack(anchor='w', padx=20)
+        self.oct_label = tk.Label(self, text="OCT: -", font=("Consolas", 14))
+        self.oct_label.pack(anchor='w', padx=20)
+        self.dec_label = tk.Label(self, text="DEC: -", font=("Consolas", 14))
+        self.dec_label.pack(anchor='w', padx=20)
+        self.hex_label = tk.Label(self, text="HEX: -", font=("Consolas", 14))
+        self.hex_label.pack(anchor='w', padx=20)
+
+        # --- Bitwise operations ---
+        tk.Label(self, text="Bitwise Operations", font=("Arial", 16, "bold")).pack(pady=(15,5))
+        bit_frame = tk.Frame(self)
+        bit_frame.pack(pady=5)
+
+        self.num1_var = tk.StringVar()
+        self.num2_var = tk.StringVar()
+
+        tk.Entry(bit_frame, textvariable=self.num1_var, font=("Consolas", 14), width=10).pack(side='left', padx=3)
+        tk.Entry(bit_frame, textvariable=self.num2_var, font=("Consolas", 14), width=10).pack(side='left', padx=3)
+
+        op_frame = tk.Frame(self)
+        op_frame.pack(pady=5)
+        tk.Button(op_frame, text="AND", width=8, command=self.bitwise_and).pack(side='left', padx=2)
+        tk.Button(op_frame, text="OR", width=8, command=self.bitwise_or).pack(side='left', padx=2)
+        tk.Button(op_frame, text="XOR", width=8, command=self.bitwise_xor).pack(side='left', padx=2)
+        tk.Button(op_frame, text="NOT (1st)", width=8, command=self.bitwise_not).pack(side='left', padx=2)
+
+        # --- Bit shifts ---
+        tk.Label(self, text="Bit Shifts", font=("Arial", 16, "bold")).pack(pady=(10,5))
+        shift_frame = tk.Frame(self)
+        shift_frame.pack(pady=5)
+        self.shift_num_var = tk.StringVar()
+        self.shift_places_var = tk.StringVar()
+        tk.Entry(shift_frame, textvariable=self.shift_num_var, font=("Consolas", 14), width=10).pack(side='left', padx=3)
+        tk.Entry(shift_frame, textvariable=self.shift_places_var, font=("Consolas", 14), width=5).pack(side='left', padx=3)
+        shift_btn_frame = tk.Frame(self)
+        shift_btn_frame.pack(pady=5)
+        tk.Button(shift_btn_frame, text="<< Left", width=10, command=self.shift_left).pack(side='left', padx=2)
+        tk.Button(shift_btn_frame, text=">> Right", width=10, command=self.shift_right).pack(side='left', padx=2)
+
+        # --- Result bar ---
+        self.result_var = tk.StringVar(value="Result will appear here")
+        tk.Entry(self, textvariable=self.result_var, font=("Consolas", 16), width=35, justify='center', bg="#f0f0f0").pack(pady=10, padx=10, ipady=4)
+
+    def set_base(self, base):
+        self.input_base = base
+        self.base_label.config(text=f"Current Base: {base}")
+        self.update_conversions()
+
+    def update_conversions(self, *args):
+        val = self.input_var.get().strip()
+        try:
+            n = int(val, {'BIN':2, 'OCT':8, 'DEC':10, 'HEX':16}[self.input_base])
+            self.bin_label.config(text=f"BIN: {bin(n)[2:]}")
+            self.oct_label.config(text=f"OCT: {oct(n)[2:]}")
+            self.dec_label.config(text=f"DEC: {n}")
+            self.hex_label.config(text=f"HEX: {hex(n)[2:].upper()}")
+        except:
+            self.bin_label.config(text="BIN: -")
+            self.oct_label.config(text="OCT: -")
+            self.dec_label.config(text="DEC: -")
+            self.hex_label.config(text="HEX: -")
+
+    # Bitwise
+    def bitwise_and(self):
+        self.do_bitwise_op(lambda a,b: a & b, "AND")
+
+    def bitwise_or(self):
+        self.do_bitwise_op(lambda a,b: a | b, "OR")
+
+    def bitwise_xor(self):
+        self.do_bitwise_op(lambda a,b: a ^ b, "XOR")
+
+    def bitwise_not(self):
+        try:
+            a = int(self.num1_var.get())
+            res = ~a
+            self.result_var.set(f"NOT {a} = {res}")
+        except:
+            self.result_var.set("Invalid Input")
+
+    def do_bitwise_op(self, func, op_name):
+        try:
+            a = int(self.num1_var.get())
+            b = int(self.num2_var.get())
+            res = func(a,b)
+            self.result_var.set(f"{a} {op_name} {b} = {res}")
+        except:
+            self.result_var.set("Invalid Input")
+
+    # Shift
+    def shift_left(self):
+        self.do_shift_op(lambda n,p: n << p, "<<")
+
+    def shift_right(self):
+        self.do_shift_op(lambda n,p: n >> p, ">>")
+
+    def do_shift_op(self, func, op_name):
+        try:
+            n = int(self.shift_num_var.get())
+            p = int(self.shift_places_var.get())
+            res = func(n,p)
+            self.result_var.set(f"{n} {op_name} {p} = {res}")
+        except:
+            self.result_var.set("Invalid Input")
+
+programming_widget = ProgrammingMode(programming_frame)
+programming_widget.pack(padx=10, pady=10)
+#pandc
+perm_comb_frame = tk.Frame(permutations_frame)
+perm_comb_frame.pack(pady=10)
+
+perm_content_frame = tk.Frame(permutations_frame)
+perm_content_frame.pack(pady=10)
+
+def show_permutations():
+    pass
+def show_combinations():
+    pass
+
+# Create buttons (now variables so we can config them)
+perm_button = tk.Button(perm_comb_frame, text="Permutations", font=("Arial", 14, "bold"), width=16, command=show_permutations)
+perm_button.grid(row=0, column=0, padx=20)
+
+comb_button = tk.Button(perm_comb_frame, text="Combinations", font=("Arial", 14, "bold"), width=16, command=show_combinations)
+comb_button.grid(row=0, column=1, padx=20)
+def show_permutations():
+    for widget in perm_content_frame.winfo_children():
+        widget.destroy()
+    perm_button.config(bg="#add8e6")         # highlight permutations
+    comb_button.config(bg="SystemButtonFace") # reset combinations to default
+    build_permutations_content()
+def show_combinations():
+    for widget in perm_content_frame.winfo_children():
+        widget.destroy()
+    comb_button.config(bg="#add8e6")          # highlight combinations
+    perm_button.config(bg="SystemButtonFace") # reset permutations to default
+    build_combinations_content()
+
+# Buttons
+tk.Button(perm_comb_frame, text="Permutations", font=("Arial", 14, "bold"), bg="#add8e6", width=16, command=show_permutations).grid(row=0, column=0, padx=20)
+tk.Button(perm_comb_frame, text="Combinations", font=("Arial", 14, "bold"), width=16, command=show_combinations).grid(row=0, column=1, padx=20)
+
+def build_permutations_content():
+    tk.Label(perm_content_frame, text="Select problem type:", font=("Arial", 14)).pack(anchor='w', pady=5)
+
+    problem_var = tk.StringVar()
+    problem_combo = ttk.Combobox(perm_content_frame, textvariable=problem_var, font=("Arial", 14), width=35, state="readonly")
+    problem_combo['values'] = [
+        "nPr",
+        "With repetition",
+        "Without repetition",
+        "Circular permutations",
+        "Dictionary rank",
+        "Letters together"
+    ]
+    problem_combo.pack(pady=10)
+
+    input_frame = tk.Frame(perm_content_frame)
+    input_frame.pack(pady=15)
+
+    word_var = tk.StringVar()
+    r_var = tk.StringVar()
+    extra_var = tk.StringVar()
+    result_var = tk.StringVar(value="Result will appear here")
+
+    example_var = tk.StringVar()
+    tk.Label(perm_content_frame, textvariable=example_var, font=("Arial", 12, "italic"), fg="gray").pack()
+
+    # Evaluate button
+    def evaluate():
+        sel = problem_var.get()
+        try:
+            if sel == "nPr":
+                n = int(word_var.get())
+                r = int(r_var.get())
+                res = factorial(n) // factorial(n - r)
+                result_var.set(f"{n}P{r} = {res}")
+
+            elif sel == "With repetition":
+                word = word_var.get()
+                r = int(r_var.get())
+                res = len(word) ** r
+                result_var.set(f"{len(word)}^{r} = {res}")
+
+            elif sel == "Without repetition":
+                word = word_var.get()
+                r = int(r_var.get())
+                n = len(word)
+                res = factorial(n) // factorial(n - r)
+                result_var.set(f"{n}P{r} = {res}")
+
+            elif sel == "Circular permutations":
+                n = int(word_var.get())
+                res = factorial(n - 1)
+                result_var.set(f"({n}-1)! = {res}")
+
+            elif sel == "Dictionary rank":
+                word = word_var.get().upper()
+                rank = 1
+                sorted_letters = sorted(word)
+                for i, c in enumerate(word):
+                    for smaller in filter(lambda x: x < c, sorted_letters):
+                        temp = sorted_letters.copy()
+                        temp.remove(smaller)
+                        rank += factorial(len(temp))
+                    sorted_letters.remove(c)
+                result_var.set(f"Rank of '{word}' = {rank}")
+
+            elif sel == "Letters together":
+                word = word_var.get()
+                group = extra_var.get()
+                if not group or group not in word:
+                    result_var.set("Invalid group or not in word")
+                else:
+                    n = len(word)
+                    k = len(group)
+                    remaining = n - k + 1
+                    res = factorial(remaining)
+                    result_var.set(f"Treat group as one block: arrangements = {res}")
+            else:
+                result_var.set("Please select a problem type.")
+        except Exception as e:
+            result_var.set("Invalid input!")
+
+    tk.Button(perm_content_frame, text="Evaluate", font=("Arial", 14), bg="#90ee90", command=evaluate).pack(pady=10)
+
+    # Result entry at bottom
+    result_entry = tk.Entry(perm_content_frame, textvariable=result_var, font=("Arial", 16), justify='center', width=40, bg="#f0f0f0")
+    result_entry.pack(pady=30, ipady=5)
+
+    def update_inputs(event):
+        for widget in input_frame.winfo_children():
+            widget.destroy()
+        sel = problem_var.get()
+
+        if sel == "nPr":
+            tk.Label(input_frame, text="Enter n:", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            tk.Entry(input_frame, textvariable=word_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            tk.Label(input_frame, text="Enter r:", font=("Arial", 14)).grid(row=1, column=0, sticky='w', pady=5)
+            tk.Entry(input_frame, textvariable=r_var, font=("Arial", 14)).grid(row=1, column=1, pady=5)
+            example_var.set("Example: n=5, r=3 ⇒ Number of permutations 5P3")
+
+        elif sel in ["With repetition", "Without repetition"]:
+            tk.Label(input_frame, text="Enter word:", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            tk.Entry(input_frame, textvariable=word_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            tk.Label(input_frame, text="Length of word to form (r):", font=("Arial", 14)).grid(row=1, column=0, sticky='w', pady=5)
+            tk.Entry(input_frame, textvariable=r_var, font=("Arial", 14)).grid(row=1, column=1, pady=5)
+            if sel == "With repetition":
+                example_var.set("Example: word='ABC', r=2 ⇒ 3^2=9")
+            else:
+                example_var.set("Example: word='ABC', r=2 ⇒ 3P2=6")
+
+        elif sel == "Circular permutations":
+            tk.Label(input_frame, text="Enter number of items (n):", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            tk.Entry(input_frame, textvariable=word_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            example_var.set("Example: n=4 ⇒ Circular permutations=(4-1)!=6")
+
+        elif sel == "Dictionary rank":
+            tk.Label(input_frame, text="Enter the word:", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            tk.Entry(input_frame, textvariable=word_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            example_var.set("Example: Find rank of 'SMART' in all permutations")
+
+        elif sel == "Letters together":
+            tk.Label(input_frame, text="Enter word:", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            tk.Entry(input_frame, textvariable=word_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            tk.Label(input_frame, text="Letter(s) to keep together:", font=("Arial", 14)).grid(row=1, column=0, sticky='w', pady=5)
+            tk.Entry(input_frame, textvariable=extra_var, font=("Arial", 14)).grid(row=1, column=1, pady=5)
+            example_var.set("Example: word='APPLE', keep='PP' ⇒ treat as one block")
+
+    problem_combo.bind("<<ComboboxSelected>>", update_inputs)
+
+show_permutations()
+comb_problem_var = StringVar()
+comb_example_var = StringVar()
+comb_word_var = StringVar()
+comb_r_var = StringVar()
+comb_n_var = StringVar()
+comb_extra_var = StringVar()
+comb_result_var = StringVar(value="Result will appear here")
+
+# Highlight active button
+def highlight_active(active):
+    if active == 'perm':
+        perm_button.config(bg="#add8e6")
+        comb_button.config(bg="SystemButtonFace")
+    else:
+        comb_button.config(bg="#add8e6")
+        perm_button.config(bg="SystemButtonFace")
+
+# Show combinations content
+def show_combinations():
+    highlight_active('comb')
+    for widget in perm_content_frame.winfo_children():
+        widget.destroy()
+    build_combinations_content()
+
+# Placeholder for permutations (you already have)
+
+
+# Buttons
+perm_button = Button(perm_comb_frame, text="Permutations", font=("Arial", 14, "bold"),
+                     width=16, command=show_permutations)
+perm_button.grid(row=0, column=0, padx=20)
+
+comb_button = Button(perm_comb_frame, text="Combinations", font=("Arial", 14, "bold"),
+                     width=16, command=show_combinations)
+comb_button.grid(row=0, column=1, padx=20)
+
+# Build combinations content
+def build_combinations_content():
+    Label(perm_content_frame, text="Select problem type:", font=("Arial", 14)).pack(anchor='w', pady=5)
+
+    comb_problem_combo = ttk.Combobox(perm_content_frame, textvariable=comb_problem_var,
+                                      font=("Arial", 14), width=35, state="readonly")
+    comb_problem_combo['values'] = [
+        "nCr",
+        "With repetition",
+        "Word selection",
+        "Committees",
+        "Identical items"
+    ]
+    comb_problem_combo.pack(pady=10)
+
+    input_frame = Frame(perm_content_frame)
+    input_frame.pack(pady=15)
+
+    Label(perm_content_frame, textvariable=comb_example_var, font=("Arial", 12, "italic"), fg="gray").pack()
+
+    # Evaluate
+    def evaluate_comb():
+        sel = comb_problem_var.get()
+        try:
+            if sel == "nCr":
+                n = int(comb_n_var.get())
+                r = int(comb_r_var.get())
+                res = factorial(n) // (factorial(r) * factorial(n - r))
+                comb_result_var.set(f"{n}C{r} = {res}")
+
+            elif sel == "With repetition":
+                n = int(comb_n_var.get())
+                r = int(comb_r_var.get())
+                res = factorial(n + r - 1) // (factorial(r) * factorial(n - 1))
+                comb_result_var.set(f"({n}+{r}-1)C{r} = {res}")
+    
+
+            elif sel == "Word selection":
+                word = comb_word_var.get()
+                r = int(comb_r_var.get())
+                n = len(word)
+                res = factorial(n) // (factorial(r) * factorial(n - r))
+                comb_result_var.set(f"Select {r} letters from {word}: {n}C{r} = {res}")
+
+            elif sel == "Committees":
+                n = int(comb_n_var.get())
+                r = int(comb_r_var.get())
+                res = factorial(n) // (factorial(r) * factorial(n - r))
+                comb_result_var.set(f"Choose {r} out of {n}: {n}C{r} = {res}")
+
+            elif sel == "Identical items":
+                word = comb_word_var.get().upper()
+                letters = list(word)
+                total = len(letters)
+                counts = {}
+                for c in letters:
+                    counts[c] = counts.get(c, 0) + 1
+                denom = 1
+                for count in counts.values():
+                    denom *= factorial(count)
+                res = factorial(total) // denom
+                comb_result_var.set(f"Unique combinations = {res}")
+            else:
+                comb_result_var.set("Please select a problem type.")
+        except Exception:
+            comb_result_var.set("Invalid input!")
+
+    Button(perm_content_frame, text="Evaluate", font=("Arial", 14), bg="#90ee90", command=evaluate_comb).pack(pady=10)
+
+    Entry(perm_content_frame, textvariable=comb_result_var, font=("Arial", 16),
+          justify='center', width=40, bg="#f0f0f0").pack(pady=30, ipady=5)
+
+    # Update inputs dynamically
+    def update_inputs(event):
+        for widget in input_frame.winfo_children():
+            widget.destroy()
+        sel = comb_problem_var.get()
+
+        if sel == "nCr":
+            Label(input_frame, text="Enter n:", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_n_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            Label(input_frame, text="Enter r:", font=("Arial", 14)).grid(row=1, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_r_var, font=("Arial", 14)).grid(row=1, column=1, pady=5)
+            comb_example_var.set("Example: n=5, r=2 ⇒ 5C2=10")
+
+        elif sel == "With repetition":
+            Label(input_frame, text="Enter n:", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_n_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            Label(input_frame, text="Enter r:", font=("Arial", 14)).grid(row=1, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_r_var, font=("Arial", 14)).grid(row=1, column=1,pady=5)
+            comb_example_var.set(
+    "With repetition:\n"
+    "• You can pick the same letter multiple times.\n"
+    "Example: choose 2 letters from A,B,C → AA, AB, AC, BB, BC, CC.\n"
+    "Total combinations = (n+r-1)Cr = (3+2-1)C2=4C2=6."
+)
+        elif sel == "Word selection":
+            Label(input_frame, text="Enter word:", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_word_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            Label(input_frame, text="Select r letters:", font=("Arial", 14)).grid(row=1, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_r_var, font=("Arial", 14)).grid(row=1, column=1, pady=5)
+            comb_example_var.set("Example: word='APPLE', r=3 ⇒ 5C3=10")
+
+        elif sel == "Committees":
+            Label(input_frame, text="Total people (n):", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_n_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            Label(input_frame, text="Select k people:", font=("Arial", 14)).grid(row=1, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_r_var, font=("Arial", 14)).grid(row=1, column=1, pady=5)
+            comb_example_var.set("Example: n=10, k=3 ⇒ 10C3=120")
+
+        elif sel == "Identical items":
+            Label(input_frame, text="Enter word with repeats:", font=("Arial", 14)).grid(row=0, column=0, sticky='w', pady=5)
+            Entry(input_frame, textvariable=comb_word_var, font=("Arial", 14)).grid(row=0, column=1, pady=5)
+            comb_example_var.set("Example: word='AAB' ⇒ total!/repeats!=3!/2!=3")
+
+    comb_problem_combo.bind("<<ComboboxSelected>>", update_inputs)
+show_permutations()
+
+# Start by showing permutations
+
+
+
+root.mainloop()
