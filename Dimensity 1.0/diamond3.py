@@ -435,7 +435,7 @@ def open_eplay():
         brick_image = brick_image.resize((250, 150))
         brick_photo = ImageTk.PhotoImage(brick_image)
         def launch_brick():
-            subprocess.Popen([sys.executable, BASE_PATH,"collision.py"])
+            subprocess.Popen([sys.executable,os.path.join(BASE_PATH, "collision.py")])
         brick_btn = tk.Button(games_frame, image=brick_photo, text="BRICK BREAKER", compound="top",
                              font=("Helvetica Neue", 16, "bold"),
                              bg="#1e1e1e", fg="black", bd=0, command=launch_brick)
