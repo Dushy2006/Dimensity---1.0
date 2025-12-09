@@ -10,7 +10,7 @@ import csv
 import sys
 import time
 
-BASE_PATH = r"C:/Users/Chethan S/OneDrive/Desktop/Dimensity 1.0/Dimensity---1.0/Dimensity 1.0"
+BASE_PATH = r"C:\Users\Chethan S\OneDrive\Desktop\Dimensity 1.0\Dimensity---1.0\Dimensity 1.0"
 
 
 sys.path.append(BASE_PATH)
@@ -117,9 +117,9 @@ def open_settings():
 
     # Authors data (replace values in code if needed)
     authors_data = [
-        ["Dushyanth R", "Developed the Pong game, E-Files, Weather App, E-Calci, and the Login Interface"],
+        ["Dushyanth R", "Developed the Pong game, E-Files and the E-Calci"],
         ["Jivesh", "Built the E-Calendar and Asphalt Game"],
-        ["Author 3", "Created the Clock System and Integrated AI Framework"],
+        ["Author 3", "Created the Clock System and Integrated AI Framework "],
         ["Author 4", "Developed Brick Breaker, Hangman, and the To-Do List Application"]
     ]
 
@@ -385,7 +385,14 @@ def open_efiles():
     ewin.lift()
     ewin.focus_force()
 
-# ---------------- E-Calendar ----------------
+# ---------------- E-Chat_bot ----------------
+def open_chatbot():
+    """Launch the chatbot program in a separate window."""
+    try:
+        subprocess.Popen([sys.executable,r"C:\Users\Chethan S\OneDrive\Desktop\Dimensity 1.0 Redesigned\Dimensity---1.0\Dimensity 1.0\torrus_ai.py"])
+    except Exception as e:
+        messagebox.showerror("Chatbot Error",
+                             f"Could not open Chatbot:\n{e}")
 
 
 # ---------------- E-Play (existing logic) ----------------
@@ -689,6 +696,13 @@ btn_style = {
     "padx": 20,
     "pady": 10
 }
+
+
+tk.Button(bottom_frame, text="🧠 Chatbot",
+          command=open_chatbot, **btn_style)\
+  .pack(side="left", padx=20, pady=10)
+
+
 tk.Button(bottom_frame, text="🎮 E-Play", command=open_eplay, **btn_style).pack(side="left", padx=20, pady=10)
 tk.Button(bottom_frame, text="🧮 E-Calci",command=lambda:launch_ecalc_embedded(root,ecalc_path) ,**btn_style).pack(side="left", padx=20, pady=10)
 tk.Button(bottom_frame, text="📁 E-Files", command=open_efiles, **btn_style).pack(side="left", padx=20, pady=10)
