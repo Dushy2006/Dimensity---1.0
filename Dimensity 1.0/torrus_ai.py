@@ -41,6 +41,12 @@ title_label.pack(side=tk.LEFT, padx=18)
 subtitle_label=tk.Label(header, text="Personal AI Assistant",bg=HEADER_BG, fg="#3B07F8", font=("Cascadia Code", 16 , "bold"))
 subtitle_label.pack(side=tk.LEFT, padx=(6,0))
 
+back_btn_settings= tk.Frame(root, bg="black")
+back_btn_settings.pack(fill="x", padx=12, pady=8)
+tk.Button(back_btn_settings, text="Close", font=("Helvetica Neue", 14, "bold"),
+              bg="#222222", fg="black", activebackground="#333333",
+              command=root.destroy).pack(side="right")
+
 """****************************************************************************************************************************"""
 #                                            COLOURS
 BG = "#0C0A0B"
