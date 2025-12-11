@@ -9,7 +9,11 @@ import pickle
 import csv
 import sys
 import time
-sys.path.append("/Users/dushyanthraj/Desktop/Dimensity 1.0")
+
+BASE_PATH = r"C:\Users\Chethan S\OneDrive\Desktop\Dimensity 1.0\Dimensity---1.0\Dimensity 1.0"
+
+
+sys.path.append(BASE_PATH)
 
 
 # ---------------- Root / Base UI ----------------
@@ -21,9 +25,12 @@ screen_width = root.winfo_screenwidth()
 screen_height = root.winfo_screenheight()
 root.geometry(f"{screen_width}x{screen_height}")
 root.configure(bg="black")
+root.attributes("-fullscreen",True)
+
 
 # --- Wallpaper (keep your original path) ---
-wallpaper_path = "/Users/dushyanthraj/Desktop/Dimensity 1.0/assets/wallpaper.png"
+wallpaper_path = os.path.join(BASE_PATH, "assets", "wallpaper.png")
+
 try:
     image = Image.open(wallpaper_path)
     image = image.resize((screen_width, screen_height))
@@ -65,6 +72,7 @@ def open_settings():
     settings_win.title("About — Dimensity")
     settings_win.geometry("900x700")
     settings_win.configure(bg="black")
+    settings_win.attributes("-fullscreen",True)
 
     # Attach to main window (nice on macOS)
     try:
@@ -109,9 +117,9 @@ def open_settings():
 
     # Authors data (replace values in code if needed)
     authors_data = [
-        ["Dushyanth R", "Developed the Pong game, E-Files, Weather App, E-Calci, and the Login Interface"],
+        ["Dushyanth R", "Developed the Pong game, E-Files and the E-Calci"],
         ["Jivesh", "Built the E-Calendar and Asphalt Game"],
-        ["Author 3", "Created the Clock System and Integrated AI Framework"],
+        ["Author 3", "Created the Clock System and Integrated AI Framework "],
         ["Author 4", "Developed Brick Breaker, Hangman, and the To-Do List Application"]
     ]
 
@@ -148,9 +156,9 @@ def open_settings():
              fg="white", bg="black", wraplength=860, justify="left").pack(padx=12, pady=(0, 12), anchor="w")
 
     # Footer Close button (clear visible colors)
-    footer = tk.Frame(settings_win, bg="black")
-    footer.pack(fill="x", padx=12, pady=8)
-    tk.Button(footer, text="Close", font=("Helvetica Neue", 14, "bold"),
+    back_btn_settinngs= tk.Frame(settings_win, bg="black")
+    back_btn_settinngs.pack(fill="x", padx=12, pady=8)
+    tk.Button(back_btn_settinngs, text="Close", font=("Helvetica Neue", 14, "bold"),
               bg="#222222", fg="black", activebackground="#333333",
               command=settings_win.destroy).pack(side="right")
 
@@ -163,7 +171,7 @@ settings_btn = tk.Button(bg_label, text="⚙️",
 settings_btn.place(x=20, y=20)
 
 # ---------------- E-Files directories ----------------
-BASE_DIR = os.path.expanduser("/Users/dushyanthraj/Desktop/Dimensity 1.0/E-Files")
+BASE_DIR = os.path.join(BASE_PATH,"E-files")
 TEXT_DIR = os.path.join(BASE_DIR, "text")
 BINARY_DIR = os.path.join(BASE_DIR, "binary")
 CSV_DIR = os.path.join(BASE_DIR, "csv")
@@ -205,6 +213,7 @@ def open_efiles():
     ewin.configure(bg="black")
     ewin.transient(root)
     ewin.grab_set()
+    ewin.attributes("-fullscreen",True)
 
     content = tk.Frame(ewin, bg="black")
     content.pack(fill="both", expand=True, padx=40, pady=8)
@@ -284,6 +293,8 @@ def open_efiles():
         big_back_button(action_panel, lambda: select_type(file_type)).pack(side="bottom", pady=8)
         raise_panel(action_panel)
 
+
+
     # ---------------- Home Panel ----------------
     tk.Label(home_panel, text="Choose Mode", font=("Helvetica Neue", 28), fg="white", bg="black").pack(pady=20)
     btns = tk.Frame(home_panel, bg="black")
@@ -305,6 +316,13 @@ def open_efiles():
 
     make_button(btns, "READ", lambda: go_to_type("read")).pack(side="left", padx=30)
     make_button(btns, "WRITE", lambda: go_to_type("write")).pack(side="left", padx=30)
+    
+    back_btn_files= tk.Frame(ewin, bg="black")
+    back_btn_files.pack(fill="x", padx=12, pady=8)
+    tk.Button(back_btn_files, text="Close", font=("Helvetica Neue", 14, "bold"),
+              bg="#222222", fg="black", activebackground="#333333",
+              command=ewin.destroy).pack(side="right")
+
 
     # ---------------- Type / Action Panel ----------------
     def select_type(ftype):
@@ -367,7 +385,14 @@ def open_efiles():
     ewin.lift()
     ewin.focus_force()
 
-# ---------------- E-Calendar ----------------
+# ---------------- E-Chat_bot ----------------
+def open_chatbot():
+    """Launch the chatbot program in a separate window."""
+    try:
+        subprocess.Popen([sys.executable,r"C:\Users\Chethan S\OneDrive\Desktop\Dimensity 1.0 Redesigned\Dimensity---1.0\Dimensity 1.0\torrus_ai.py"])
+    except Exception as e:
+        messagebox.showerror("Chatbot Error",
+                             f"Could not open Chatbot:\n{e}")
 
 
 # ---------------- E-Play (existing logic) ----------------
@@ -376,6 +401,7 @@ def open_eplay():
     eplay_window.title("E-Play")
     eplay_window.geometry(f"{screen_width}x{screen_height}")
     eplay_window.configure(bg="black")
+    eplay_window.attributes("-fullscreen",True)
 
     tk.Label(eplay_window, text="E-PLAY",
              font=("Helvetica Neue", 60, "bold"),
@@ -384,14 +410,22 @@ def open_eplay():
     games_frame = tk.Frame(eplay_window, bg="black")
     games_frame.pack(pady=20)
 
+    back_btn_eplay= tk.Frame(eplay_window, bg="black")
+    back_btn_eplay.pack(fill="x", padx=12, pady=8)
+    tk.Button(back_btn_eplay, text="Close", font=("Helvetica Neue", 14, "bold"),
+              bg="#222222", fg="black", activebackground="#333333",
+              command=eplay_window.destroy).pack(side="right")
+
     # Pong game icon
-    pong_icon_path = "/Users/dushyanthraj/Desktop/Dimensity 1.0/pong-logo.jpg"
+    pong_icon_path = os.path.join(BASE_PATH, "pong-logo.jpg")
+    
+
     try:
         pong_image = Image.open(pong_icon_path)
         pong_image = pong_image.resize((250, 150))
         pong_photo = ImageTk.PhotoImage(pong_image)
         def launch_pong():
-            subprocess.Popen([sys.executable, "/Users/dushyanthraj/Desktop/Dimensity 1.0/pong.py"])
+            subprocess.Popen([sys.executable, os.path.join(BASE_PATH, "pong.py")])
         pong_btn = tk.Button(games_frame, image=pong_photo, text="PONG", compound="top",
                              font=("Helvetica Neue", 16, "bold"),
                              bg="#1e1e1e", fg="black", bd=0, command=launch_pong)
@@ -401,13 +435,14 @@ def open_eplay():
         # fallback simple label
         tk.Label(games_frame, text="PONG (missing asset)", fg="cyan", bg="black", font=("Helvetica Neue", 18)).pack()
     #brick_shooter
-    brick_icon_path = "/Users/dushyanthraj/Desktop/Dimensity 1.0/brick breaker.jpg"
+    brick_icon_path =  os.path.join(BASE_PATH, "brick breaker.jpg")
+
     try:
         brick_image = Image.open(brick_icon_path)
         brick_image = brick_image.resize((250, 150))
         brick_photo = ImageTk.PhotoImage(brick_image)
         def launch_brick():
-            subprocess.Popen([sys.executable, "/Users/dushyanthraj/Desktop/Dimensity 1.0/collision.py"])
+            subprocess.Popen([sys.executable,os.path.join(BASE_PATH, "collision.py")])
         brick_btn = tk.Button(games_frame, image=brick_photo, text="BRICK BREAKER", compound="top",
                              font=("Helvetica Neue", 16, "bold"),
                              bg="#1e1e1e", fg="black", bd=0, command=launch_brick)
@@ -418,7 +453,8 @@ def open_eplay():
         tk.Label(games_frame, text="BRICK (missing asset)", fg="cyan", bg="black", font=("Helvetica Neue", 18)).pack()
     #hang_man
     
-    hang_icon_path = "/Users/dushyanthraj/Desktop/Dimensity 1.0/hang.jpg"
+    hang_icon_path = os.path.join(BASE_PATH, "hang.jpg")
+
     try:
         hang_image = Image.open(hang_icon_path)
         hang_image = hang_image.resize((250, 150))
@@ -452,13 +488,15 @@ def open_eplay():
             font=("Helvetica Neue", 18)
         ).pack()
     # asphalt game icon
-    asphalt_icon_path = "/Users/dushyanthraj/Desktop/Dimensity 1.0/asphalt.jpg"
+    asphalt_icon_path = os.path.join(BASE_PATH, "asphalt.jpg")
+    
+
     try:
         asphalt_image = Image.open(asphalt_icon_path)
         asphalt_image = asphalt_image.resize((250, 150))
         asphalt_photo = ImageTk.PhotoImage(asphalt_image)
         def launch_asphalt():
-            subprocess.Popen([sys.executable, "/Users/dushyanthraj/Desktop/Dimensity 1.0/asphalt.py"])
+           subprocess.Popen([sys.executable, os.path.join(BASE_PATH, "asphalt.py")])
         asphalt_btn = tk.Button(games_frame, image=asphalt_photo, text="ASPHALT", compound="top",
                              font=("Helvetica Neue", 16, "bold"),
                              bg="#1e1e1e", fg="black", bd=0, command=launch_asphalt)
@@ -493,9 +531,15 @@ def launch_ecalc_embedded(parent_window, ecalc_filepath):
     win.title("E-Calc")
     try:
         win.geometry("900x700")
+        win.attributes("-fullscreen",True)
     except Exception:
         pass
-
+    
+    back_btn_calci= tk.Frame(win, bg="black")
+    back_btn_calci.pack(fill="x", padx=12, pady=8)
+    tk.Button(back_btn_calci, text="Close", font=("Helvetica Neue", 14, "bold"),
+              bg="#222222", fg="black", activebackground="#333333",
+              command=win.destroy).pack(side="right")
     # attach to parent so macOS groups window with the main app
     try:
         win.transient(parent_window)
@@ -584,7 +628,7 @@ def launch_ecalc_embedded(parent_window, ecalc_filepath):
         pass
 
     return win
-ecalc_path = "/Users/dushyanthraj/Desktop/Dimensity 1.0/CALCI.py"
+ecalc_path = os.path.join(BASE_PATH, "CALCI.py")
 #ecalendar_______________________________________________________________
 # ---------------- E-Calendar Button ----------------
 def open_calendar():
@@ -623,11 +667,15 @@ class ClockWidget:
         self.update_clock()
 
     def update_clock(self):
-        now = time.localtime()
-        self.label_time.config(text=time.strftime("%I:%M %p", now))
-        self.label_day.config(text=time.strftime("%A", now))
-        self.label_date.config(text=time.strftime("%d %B %Y", now))
-        self.frame.after(1000, self.update_clock)
+        try:
+            if self.frame.winfo_exists():
+                now = time.localtime()
+                self.label_time.config(text=time.strftime("%I:%M %p", now))
+                self.label_day.config(text=time.strftime("%A", now))
+                self.label_date.config(text=time.strftime("%d %B %Y", now))
+                self.frame.after(1000, self.update_clock)
+        except tk.TclError:
+            pass
 # After bg_label and title/subtitle setup
 clock_widget = ClockWidget(bg_label)
 
@@ -648,9 +696,23 @@ btn_style = {
     "padx": 20,
     "pady": 10
 }
-tk.Button(bottom_frame, text="E-Play", command=open_eplay, **btn_style).pack(side="left", padx=20, pady=10)
-tk.Button(bottom_frame, text="E-Calci",command=lambda:launch_ecalc_embedded(root,ecalc_path) ,**btn_style).pack(side="left", padx=20, pady=10)
-tk.Button(bottom_frame, text="E-Files", command=open_efiles, **btn_style).pack(side="left", padx=20, pady=10)
-tk.Button(bottom_frame, text="E-Calendar", command=open_calendar,**btn_style).pack(side="left", padx=20, pady=10)
+
+
+tk.Button(bottom_frame, text="🧠 Chatbot",
+          command=open_chatbot, **btn_style)\
+  .pack(side="left", padx=20, pady=10)
+
+
+tk.Button(bottom_frame, text="🎮 E-Play", command=open_eplay, **btn_style).pack(side="left", padx=20, pady=10)
+tk.Button(bottom_frame, text="🧮 E-Calci",command=lambda:launch_ecalc_embedded(root,ecalc_path) ,**btn_style).pack(side="left", padx=20, pady=10)
+tk.Button(bottom_frame, text="📁 E-Files", command=open_efiles, **btn_style).pack(side="left", padx=20, pady=10)
+tk.Button(bottom_frame, text="📅 E-Calendar", command=open_calendar,**btn_style).pack(side="left", padx=20, pady=10)
+
+#Added fullscreen toggle button for the whole of dimensity
+
+
+root.bind("<F11>", lambda e: root.attributes("-fullscreen",
+                                             not root.attributes("-fullscreen")))
+root.bind("<Escape>", lambda e: root.attributes("-fullscreen", False))
 
 root.mainloop()

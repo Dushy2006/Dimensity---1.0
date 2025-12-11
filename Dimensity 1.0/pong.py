@@ -1,8 +1,12 @@
 import pygame 
+import sys
 pygame.init()
 
 WIDTH , HEIGHT = 1425,825
-WIN = pygame.display.set_mode((WIDTH,HEIGHT))
+info = pygame.display.Info()
+WIDTH, HEIGHT = info.current_w, info.current_h
+WIN = pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+
 
 # dynamically get screen size
  #Creating a window for the display
@@ -150,6 +154,10 @@ def main():  #Def is used to define a fuction
             if event.type == pygame.QUIT: #If we want to leave the game "run" will become false making the game to end 
                 run = False
                 break
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
         keys = pygame.key.get_pressed()
         handle_paddle_movement(keys, left_paddle, right_paddle)

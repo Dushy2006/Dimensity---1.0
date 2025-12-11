@@ -5,7 +5,10 @@ pygame.init()
 
 # Screen Setup
 WIDTH, HEIGHT = 1425, 825
-screen = pygame.display.set_mode((WIDTH, HEIGHT))
+info = pygame.display.Info()
+WIDTH, HEIGHT = info.current_w, info.current_h
+screen= pygame.display.set_mode((WIDTH, HEIGHT), pygame.FULLSCREEN)
+
 pygame.display.set_caption("Brick Breaker / Breakout")
 
 clock = pygame.time.Clock()
@@ -79,6 +82,10 @@ while running:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
+        elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    pygame.quit()
+                    sys.exit()
 
     # Paddle Control
     keys = pygame.key.get_pressed()
@@ -137,6 +144,7 @@ while running:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     reset_game()
                     waiting = False
+                
 
     # WIN CONDITION
     if score == brick_rows * brick_cols:
@@ -153,6 +161,7 @@ while running:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_r:
                     reset_game()
                     waiting = False
+                
 
     # Score HUD
     score_text = font.render(f"Score : {score}", True, WHITE)
