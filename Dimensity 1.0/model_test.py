@@ -28,22 +28,6 @@ try:
     else:
         print(f"✅ SUCCESS: Found {count} models available to you.")
 
-    # --- TEST B: TRY SENDING A MESSAGE ---
-    if found_flash:
-        test_model = "gemini-2.0-flash-exp"
-    else:
-        test_model = "gemini-1.5-flash" # Fallback if 2.0 isn't there
-
-    print(f"\n--- 3. SENDING TEST MESSAGE (Using {test_model}) ---")
-    
-    response = client.models.generate_content(
-        model=test_model,
-        contents="Hello! If you can read this, reply with 'System Operational'."
-    )
-    
-    print(f"🤖 REPLY: {response.text}")
-    print("\n🎉 CONCLUSION: You are NOT banned. It works!")
-
 except Exception as e:
     print(f"\n💀 FATAL ERROR: {e}")
-    print("If this says '403' or 'Permission Denied', generate a NEW key in a NEW project.")
+    print("Permission Denied, generate a NEW key in a NEW project.")
