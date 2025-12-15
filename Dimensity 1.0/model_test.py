@@ -1,7 +1,7 @@
 from google import genai
 
 # !!! PASTE YOUR KEY INSIDE THE QUOTES BELOW !!!
-MY_API_KEY = "AIzaSyCGEczBdPNbrir9tLWKBw9rCMuqsBksyUI"
+MY_API_KEY = ""
 
 print("--- 1. CONNECTING ---")
 try:
