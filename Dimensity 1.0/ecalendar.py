@@ -1,16 +1,6 @@
 import customtkinter as ctk
 import calendar
 import datetime
-import ctypes
-
-# --- Sharpness Fix for Windows ---
-try:
-    ctypes.windll.shcore.SetProcessDpiAwareness(1)
-except:
-    pass
-
-# --- Configuration ---
-ctk.set_appearance_mode("Dark")
 
 # --- Colors ---
 COLOR_BG = "#0f172a"       # Background
@@ -20,13 +10,18 @@ COLOR_TASK = "#eab308"     # Gold/Yellow for tasks
 COLOR_BDAY = "#d946ef"     # Fuchsia/Purple for birthdays
 COLOR_DEFAULT = "#334155"  # Grey/Blue default
 
-class UltimateCalendar(ctk.CTk):
-    def __init__(self):
-        super().__init__()
+class UltimateCalendar(ctk.CTkToplevel):
+    def __init__(self,parent):
+        super().__init__(parent)
 
         self.title("Life Organizer")
         self.geometry("900x600")
         self.configure(fg_color=COLOR_BG)
+        self.lift()
+        self.attributes("-topmost", True)
+        self.after(50, lambda: self.attributes("-topmost", False))
+        self.focus_force()
+
         
         # --- Data ---
         self.today = datetime.date.today()
@@ -99,6 +94,9 @@ class UltimateCalendar(ctk.CTk):
         # Initial draw
         self.update_calendar()
         self.show_events()
+
+
+
 
     # ---------------- CALENDAR ----------------
     def update_calendar(self):
@@ -225,8 +223,3 @@ class UltimateCalendar(ctk.CTk):
         self.selected_day = 1
         self.update_calendar()
         self.show_events()
-
-
-if __name__ == "__main__":
-    app = UltimateCalendar()
-    app.mainloop()

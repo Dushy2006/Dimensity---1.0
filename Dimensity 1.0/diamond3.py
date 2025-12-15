@@ -9,12 +9,23 @@ import pickle
 import csv
 import sys
 import time
+"""*****************************************************************************************************************************"""
+#                                             for calendar
+
+import customtkinter as ctk
+import ctypes
+try:
+    ctypes.windll.shcore.SetProcessDpiAwareness(1)
+except:
+    pass
+
+ctk.set_appearance_mode("Dark")
+ctk.set_default_color_theme("dark-blue")
+
+"""****************************************************************************************************************************"""
 
 BASE_PATH = r"C:\Users\Chethan S\OneDrive\Desktop\Dimensity 1.0\Dimensity---1.0\Dimensity 1.0"
-
-
 sys.path.append(BASE_PATH)
-
 
 # ---------------- Root / Base UI ----------------
 root = tk.Tk()
@@ -28,7 +39,7 @@ root.configure(bg="black")
 root.attributes("-fullscreen",True)
 
 
-# --- Wallpaper (keep your original path) ---
+# --- Wallpaper (keep your original path) --------
 wallpaper_path = os.path.join(BASE_PATH, "assets", "wallpaper.png")
 
 try:
@@ -74,7 +85,7 @@ def open_settings():
     settings_win.configure(bg="black")
     settings_win.attributes("-fullscreen",True)
 
-    # Attach to main window (nice on macOS)
+    #  Attach to main window .Just to make that window go along with the main program and not go behind and open another window
     try:
         settings_win.transient(root)
         settings_win.focus_force()
@@ -85,7 +96,7 @@ def open_settings():
     header = tk.Frame(settings_win, bg="black")
     header.pack(fill="x", padx=12, pady=(12, 6))
     tk.Label(header, text="Dimensity 1.0", font=("Helvetica Neue", 28, "bold"),
-             fg="cyan", bg="black").pack(side="left", anchor="w")
+             fg="cyan", bg="black").pack(side="left", anchor="w")          
     tk.Label(header, text="Version 1.0 (alpha)", font=("Helvetica Neue", 12),
              fg="white", bg="black").pack(side="right", anchor="e")
 
@@ -110,7 +121,7 @@ def open_settings():
     tk.Label(about_frame, text=about_text, font=("Helvetica Neue", 13),
              fg="white", bg="black", wraplength=860, justify="left").pack()
 
-    # Authors header
+    #                        Authors header
     tk.Label(settings_win, text="Authors & Contributions",
              font=("Helvetica Neue", 20, "bold"),
              fg="white", bg="black").pack(padx=12, pady=(8, 6), anchor="w")
@@ -119,8 +130,8 @@ def open_settings():
     authors_data = [
         ["Dushyanth R", "Developed the Pong game, E-Files and the E-Calci"],
         ["Jivesh", "Built the E-Calendar and Asphalt Game"],
-        ["Author 3", "Created the Clock System and Integrated AI Framework "],
-        ["Author 4", "Developed Brick Breaker, Hangman, and the To-Do List Application"]
+        ["Chethan S", "Created the Clock System and Integrated AI Framework and chatbot"],
+        ["Chethan P N", "Developed Brick Breaker and Hangman"]
     ]
 
     # Authors table (high-contrast labels — not disabled)
@@ -461,9 +472,7 @@ def open_eplay():
         hang_photo = ImageTk.PhotoImage(hang_image)
 
         def launch_hang():
-            import hangman   # file must be named hangman.py
-            hangman.run_hangman(parent_window=eplay_window)   # root = your main Dimensity window
-
+            subprocess.Popen([sys.executable,os.path.join(BASE_PATH, "hangman.py")])
 
         hang_btn = tk.Button(
             games_frame,
@@ -632,52 +641,53 @@ ecalc_path = os.path.join(BASE_PATH, "CALCI.py")
 #ecalendar_______________________________________________________________
 # ---------------- E-Calendar Button ----------------
 def open_calendar():
-    """
-    Opens the Life Organizer calendar as a standalone window.
-    """
     try:
-        # Import the refactored calendar file
-        from ecalendar import UltimateCalendar  # make sure your file is NOT named calendar.py
-        app = UltimateCalendar()
-        app.mainloop()  # launches the calendar window
+        from ecalendar import UltimateCalendar
+        UltimateCalendar(root)   #                                     root = your main CTk instance
     except Exception as e:
         messagebox.showerror("Calendar Error", f"Could not open calendar:\n{e}")
 #clock______________________________________________________________________________________________________
 # ---------------- E-Clock Widget ----------------
 class ClockWidget:
     def __init__(self, parent, x=0.85, y=0.05):
-        """
-        parent : parent frame (bg_label)
-        x, y   : relative position (0.0-1.0)
-        """
-        self.frame = tk.Frame(parent, bg="black", bd=0)
-        self.frame.place(relx=x, rely=y, anchor="ne")  # top-right corner
+        self.parent = parent
+        self.after_id = None  # store after() id
 
-        # TIME label
+        self.frame = tk.Frame(parent, bg="black", bd=0)
+        self.frame.place(relx=x, rely=y, anchor="ne")
+
         self.label_time = tk.Label(self.frame, font=("Segoe UI", 80), fg="teal", bg="black")
         self.label_time.pack(anchor="e")
-        # DAY label
+
         self.label_day = tk.Label(self.frame, font=("Segoe UI", 30), fg="white", bg="black")
         self.label_day.pack(anchor="e")
-        # DATE label
+
         self.label_date = tk.Label(self.frame, font=("Segoe UI", 20), fg="white", bg="black")
         self.label_date.pack(anchor="e")
 
-        # Start updates
         self.update_clock()
 
     def update_clock(self):
-        try:
-            if self.frame.winfo_exists():
-                now = time.localtime()
-                self.label_time.config(text=time.strftime("%I:%M %p", now))
-                self.label_day.config(text=time.strftime("%A", now))
-                self.label_date.config(text=time.strftime("%d %B %Y", now))
-                self.frame.after(1000, self.update_clock)
-        except tk.TclError:
-            pass
+        if not self.frame.winfo_exists():
+            return  # stop cleanly
+
+        now = time.localtime()
+        self.label_time.config(text=time.strftime("%I:%M %p", now))
+        self.label_day.config(text=time.strftime("%A", now))
+        self.label_date.config(text=time.strftime("%d %B %Y", now))
+
+        self.after_id = self.frame.after(1000, self.update_clock)
+
+    def stop(self):
+        if self.after_id:
+            self.frame.after_cancel(self.after_id)
+            self.after_id = None
+
+
 # After bg_label and title/subtitle setup
 clock_widget = ClockWidget(bg_label)
+
+
 
 
 
