@@ -128,10 +128,10 @@ def open_settings():
 
     # Authors data (replace values in code if needed)
     authors_data = [
-        ["Dushyanth R", "Developed the Pong game, E-Files and the E-Calci"],
-        ["Jivesh", "Built the E-Calendar and Asphalt Game"],
-        ["Chethan S", "Created the Clock System and Integrated AI Framework and chatbot"],
-        ["Chethan P N", "Developed Brick Breaker and Hangman"]
+        ["Dushyanth R", "Developed the Pong game, E-Files , Integrated AI Framework and the E-Calci"],
+        ["Jivesh",      "Built the E-Calendar and Asphalt Game"                                     ],
+        ["Chethan S",   "Developed the Clock System and Integrated AI Framework and chatbot"          ],
+        ["Chethan P N", "Developed Brick Breaker and Hangman"                                       ]
     ]
 
     # Authors table (high-contrast labels — not disabled)
