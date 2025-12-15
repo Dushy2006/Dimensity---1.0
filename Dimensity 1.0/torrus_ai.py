@@ -6,8 +6,7 @@ from datetime import datetime
 import sys
 
 """*****************************************************************************************************************************"""
-#                                        API_KEY=os.getenv("GEN_AI_API_KEY")
-API_KEY="AIzaSyCGEczBdPNbrir9tLWKBw9rCMuqsBksyUI"
+API_KEY=os.getenv("API_KEY")
 if not API_KEY:
     # simple friendly popup and exit so the user knows why the app won't run
     import tkinter.messagebox as mb
