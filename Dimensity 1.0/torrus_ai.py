@@ -1,14 +1,12 @@
 import os
-import google.generativeai as genai
+from google import genai
 import tkinter as tk
 from tkinter import scrolledtext
 from datetime import datetime
 import sys
 
 """*****************************************************************************************************************************"""
-
-#                                        API_KEY=os.getenv("GEN_AI_API_KEY")
-API_KEY=os.getenv("GEN_AI_API_KEY") 
+API_KEY=os.getenv("API_KEY")
 if not API_KEY:
     # simple friendly popup and exit so the user knows why the app won't run
     import tkinter.messagebox as mb
@@ -16,11 +14,11 @@ if not API_KEY:
     sys.exit(1) 
 
 
-genai.configure(api_key=API_KEY)
-model = genai.GenerativeModel("gemini-2.0-flash")
-chat = model.start_chat(history=[])
+client = genai.Client(api_key=API_KEY)
+model = "gemini-2.0-flash-exp"
 
 
+BASE_PATH = r"C:\Users\Chethan S\OneDrive\Desktop\Dimensity 1.0\Dimensity---1.0\Dimensity 1.0"
 """****************************************************************************************************************************"""
 #                                           BASE APP
 root=tk.Tk()
@@ -45,7 +43,7 @@ back_btn_settings= tk.Frame(root, bg="black")
 back_btn_settings.pack(fill="x", padx=12, pady=8)
 tk.Button(back_btn_settings, text="Close", font=("Helvetica Neue", 14, "bold"),
               bg="#222222", fg="black", activebackground="#333333",
-              command=root.destroy).pack(side="right")
+              command=root.destroy,cursor="hand2").pack(side="right")
 
 """****************************************************************************************************************************"""
 #                                            COLOURS
@@ -56,9 +54,6 @@ BTN_BG = "#262626"
 BTN_HOVER = "#3A3A3A"
 CLEAR_BTN_BG = "#2A2A2A"
 CLEAR_BTN_HOVER = "#3B3B3B"
-
-
-
 """****************************************************************************************************************************"""
 #                                            HELPERS FOR EXTRA FUNCTIONS
 def now_ts():
@@ -66,7 +61,7 @@ def now_ts():
 
 def clear_chat():
     chat_box.config(state="normal")
-    chat_box.delete(1.0, tk.END)
+    chat_box.delete(8.0, tk.END)
     chat_box.config(state="disabled")
     chat_box.see(tk.END)
 
@@ -76,7 +71,7 @@ def clear_leave(e):
     clear_btn["bg"] = CLEAR_BTN_BG
 
 clear_btn = tk.Button(header, text="Clear Chat", bg=CLEAR_BTN_BG, fg=HEADER_TEXT,
-                      relief="flat", padx=12, pady=6, command=clear_chat)
+                      relief="flat", padx=12, pady=6, command=clear_chat , cursor="hand2")
 clear_btn.pack(side=tk.RIGHT, padx=12)
 
 def show_typing():
@@ -120,18 +115,18 @@ chat_box.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
 # Tag styles for bubble look
 chat_box.tag_config(
     "bot_bubble",
-    background="#111318",        # bubble background
-    foreground="#E6E6E6",       # bubble text
-    lmargin1=10, lmargin2=12,   # left margin (first line, other lines)
+    background="#111318",      # bubble background
+    foreground="#E6E6E6",        # bubble text
+    lmargin1=10, lmargin2=12,    # left margin (first line, other lines)
     rmargin=80,                 # right margin (keeps bubble narrow)
-    spacing3=6,                 # space after paragraph
+    spacing3=6,                    # space after paragraph
     font=("Cascadia Code", 11),
     justify="left"
 )
 
 chat_box.tag_config(
     "user_bubble",
-    background="#1C1C1C",       # accent for user (change if you like)
+    background="#1C1C1C",    
     foreground="#FB9405",
     lmargin1=80, lmargin2=80,   # push bubble to the right
     rmargin=10,
@@ -150,14 +145,19 @@ def insert_bot_message(text, ts=None):
     """Insert a left-aligned bubble with bot avatar."""
     if ts:
         msg = f"[{ts}] "
+        send_btn.config(state="normal")
     else:
         msg = ""
+        send_btn.config(state="normal")
+    
+    
     chat_box.config(state="normal")
     # avatar + bubble text
     chat_box.insert(tk.END, "🤖 ", "bot_avatar")
     chat_box.insert(tk.END, msg + text + "\n\n", "bot_bubble")
     chat_box.config(state="disabled")
     chat_box.see(tk.END)
+    
 
 def insert_user_message(text, ts=None):
     """Insert a right-aligned bubble with user avatar."""
@@ -206,7 +206,7 @@ send_btn.pack(pady=(0, 10))
 
 def send_message():
     user_text = entry.get().strip()
-
+    send_btn.config(state="disabled")
     if not user_text:
         return
     entry.delete(0, tk.END)
@@ -215,25 +215,31 @@ def send_message():
     chat_box.tag_config("user_bubble", lmargin1=10, lmargin2=60, rmargin=10, spacing3=6, font=("Cascadia Code",11,"bold"))
     chat_box.tag_config("bot_bubble", lmargin1=60, lmargin2=10, rmargin=10, spacing3=6, font=("Cascadia Code",11))
 
-# insert user bubble (example)
+#                                          insert user bubble (example)
     insert_user_message(user_text, ts=now_ts())
     
-
-    
-
-    #                                         show typing indicator BEFORE sending
+    #                                      show typing indicator BEFORE sending
     show_typing()
 
-    root.update()  # update UI immediately
+    root.update()  #                       update UI immediately
 
     try:
-        response = chat.send_message(user_text)
+        response = client.models.generate_content(
+            model=model,
+            contents=user_text
+        )
         bot_text = response.text
+    except Exception as e:
+        msg = str(e).lower()
+        if "quota" in msg or "exhausted" in msg:
+            bot_text = "Free-tier API quota reached. Please try again later."
+        else:
+            bot_text = "Error communicating with AI."
     finally:
-    #                                      remove typing indicator once response arrives
         remove_typing()
+
     insert_bot_message(bot_text, ts=now_ts())
-    
+    send_btn.config(state="normal") 
 
     
 
@@ -265,11 +271,12 @@ entry.bind("<Return>", lambda e: send_message())
 import subprocess, threading, re, os
 
 ALLOWED_APPS = {
-    "reflex":    ("subprocess", r"C:/Users/Chethan S/OneDrive/Desktop/Jackfruit-Project/4.py"),
-    "clock":  ("subprocess", r"C:/Users/Chethan S/OneDrive/Desktop/Jackfruit-Project/clock.py"),
-    "cargame": ("subprocess", r"C:/Users/Chethan S/OneDrive/Desktop/Jackfruit-Project/10.py"),
-    "aestroid_destroyer": ("subprocess", r"C:\Users\Chethan S\OneDrive\Desktop\Jackfruit-Project\aestroid_destroyer_game.py"),
-    "ultimatecalendar": ("subprocess", r"C:/Users/Chethan S/OneDrive/Desktop/Jackfruit-Project/13.py"),
+    "calci":    ("subprocess", os.path.join(BASE_PATH,"CALCI.py")),
+    "brick_game": ("subprocess", os.path.join(BASE_PATH,"collision.py")),
+    "asphalt" : ("subprocess", os.path.join(BASE_PATH,"asphalt.py")),
+    "hangman" : ("subprocess", os.path.join(BASE_PATH,"hangman.py")),
+    "pong"   :  ("subprocess", os.path.join(BASE_PATH,"pong.py")),
+    "ecalendar" : ("subprocess", os.path.join(BASE_PATH,"ecalendar.py")), 
     "listapps":  ("apps",None)
     }
 
@@ -282,10 +289,10 @@ def _launch_subprocess(path):
     # run in separate process
     subprocess.Popen([sys.executable, path])
 
-def _launch_startfile(path):
-     if not os.path.exists(path):
-         raise FileNotFoundError(path)               #THIS IS TO LAUNCH ANY EXE FILE IN THE SPECIFIED FOLDER
-     os.startfile(path)   # windows only
+# def _launch_startfile(path):
+#      if not os.path.exists(path):
+#          raise FileNotFoundError(path)               #THIS IS TO LAUNCH ANY EXE FILE IN THE SPECIFIED FOLDER
+#      os.startfile(path)   # windows only
 
 
 """***************************************************************************************************************************"""
@@ -303,9 +310,9 @@ def safe_launch(key):
         if typ == "apps":
           return True, f"The apps in the OS are: {list(ALLOWED_APPS.keys())}"
 
-        if typ == "startfile":
-             threading.Thread(target=_launch_startfile, args=(target,), daemon=True).start()
-             return True, f"Opening {key}..."
+        # if typ == "startfile":
+        #      threading.Thread(target=_launch_startfile, args=(target,), daemon=True).start()
+        #      return True, f"Opening {key}..."
         return False, "Unknown launch type."
     except Exception as e:
         return False, f"Failed to open {key}: {e}"
